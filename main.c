@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Texture* quiche = charger_image("quiche.jpg", ecran);
+
+	SDL_Texture* kart = charger_image("kart.png", ecran);
 	
 
 // Boucle principale
@@ -38,6 +40,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_RenderClear(ecran);
 		SDL_RenderCopy(ecran, quiche, NULL, NULL);
+		apply_img(ecran, kart, 0, 0);
 		SDL_PollEvent( &evenements );
 		switch(evenements.type){
 	
