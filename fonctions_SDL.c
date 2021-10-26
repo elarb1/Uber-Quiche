@@ -1,4 +1,5 @@
 #include "fonctions_SDL.h"
+#include "structures.h"
 
 SDL_Texture* charger_image (const char* nomfichier, SDL_Renderer *renderer){
 
@@ -10,10 +11,17 @@ SDL_Texture* charger_image (const char* nomfichier, SDL_Renderer *renderer){
 	return texture;
 }
 
-void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, int x, int y){
+void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, sprite_t *sprite){
 	SDL_Rect dst = {0, 0, 0, 0};
 	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
-	dst.x = x;
-	dst.y = y;
+	dst.x = sprite->x;
+	dst.y = sprite->y;
 	SDL_RenderCopy(renderer, tex, NULL, &dst);
+}
+
+void init_sprite(sprite_t *sprite, int x, int y, int w, int h){
+	sprite->x = x;
+	sprite->y = y;
+	sprite->w = w;
+	sprite->h = h;
 }

@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "fonctions_SDL.h"
+#include "structures.h"
 
 
 int main(int argc, char *argv[])
 {
+	sprite_t kart; 
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -31,8 +33,8 @@ int main(int argc, char *argv[])
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Texture* quiche = charger_image("quiche.jpg", ecran);
-
-	SDL_Texture* kart = charger_image("kart.png", ecran);
+	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
+	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 	
 
 // Boucle principale
@@ -40,7 +42,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_RenderClear(ecran);
 		SDL_RenderCopy(ecran, quiche, NULL, NULL);
-		apply_img(ecran, kart, 0, 0);
+		apply_img(ecran, vehicle, &kart);
 		SDL_PollEvent( &evenements );
 		switch(evenements.type){
 	
