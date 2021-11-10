@@ -3,9 +3,8 @@
 //reecrire le code
 
 /*
-Reecrire le code:
+Reecrire le code: 
 	- Tout le main est rearange dans d'autres fichiers
-	- Creation fichier de structures
 	- Fichier pour le monde
 	- Fichier pour le graphisme
 	- Remodifier le makefile en consequence
