@@ -1,5 +1,16 @@
 //la map fait 1024x1024
 //retructurer en differents
+//reecrire le code
+
+/*
+Reecrire le code:
+	- Tout le main est rearange dans d'autres fichiers
+	- Creation fichier de structures
+	- Fichier pour le monde
+	- Fichier pour le graphisme
+	- Remodifier le makefile en consequence
+
+*/
 
 
 #include <SDL2/SDL.h>
@@ -40,11 +51,11 @@ int main(int argc, char *argv[])
 
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
-	SDL_Texture* quiche = charger_image("quiche.jpg", ecran);
+	SDL_Texture* quiche = charger_image("map.png", ecran);
 
 	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
 	
-	SDL_Texture* vehicle = charger_image("ferrari4.png", ecran);
+	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 
