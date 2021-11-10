@@ -1,9 +1,16 @@
+//la map fait 1024x1024
+//retructurer en differents
+
+
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "structures.h"
+
+#define H 1024
+#define V 1024
 
 
 int main(int argc, char *argv[])
@@ -20,7 +27,7 @@ int main(int argc, char *argv[])
 	}
 	// Créer la fenêtre
 	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,
-	SDL_WINDOWPOS_CENTERED, 600, 600, SDL_WINDOW_RESIZABLE);
+	SDL_WINDOWPOS_CENTERED, H, V, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
 	if(fenetre == NULL){ // En cas d’erreur
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
 		SDL_Quit();
@@ -33,8 +40,10 @@ int main(int argc, char *argv[])
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Texture* quiche = charger_image("quiche.jpg", ecran);
+
 	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
-	SDL_Texture* vehicle = charger_image("kart.png", ecran);
+	
+	SDL_Texture* vehicle = charger_image("ferrari4.png", ecran);
 	
 
 // Boucle principale
@@ -55,12 +64,12 @@ int main(int argc, char *argv[])
 				case SDLK_q:
 					terminer = true; break;
 				case SDLK_LEFT:
-					if(kart.x-1 >0){
+					if(kart.x-1 >0){ //remodifier pour correspondre au nouvelles variables de la fenetre
 						kart.x -= 1; 
 					}
 					break;
 				case SDLK_RIGHT:
-					if(kart.x+1 < 600-64){
+					if(kart.x+1 < H-64){
 						kart.x += 1; 
 					}
 					break;
@@ -70,7 +79,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case SDLK_DOWN:
-					if(kart.y+1 < 600-64){
+					if(kart.y+1 < V-64){
 						kart.y += 1; 
 					}
 					break;
