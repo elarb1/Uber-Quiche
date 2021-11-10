@@ -16,6 +16,7 @@
 int main(int argc, char *argv[])
 {
 	sprite_t kart; 
+	sprite_t quiche;
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -44,6 +45,10 @@ int main(int argc, char *argv[])
 	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
 	
 	SDL_Texture* vehicle = charger_image("ferrari4.png", ecran);
+
+	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
+
+	init_sprite(&quiche, 50, 50, 64, 64);
 	
 
 // Boucle principale
@@ -52,6 +57,7 @@ int main(int argc, char *argv[])
 		SDL_RenderClear(ecran);
 		SDL_RenderCopy(ecran, quiche, NULL, NULL);
 		apply_img(ecran, vehicle, &kart);
+		apply_img(ecran, quiche2, &quiche);
 		SDL_PollEvent( &evenements );
 		switch(evenements.type){
 	
