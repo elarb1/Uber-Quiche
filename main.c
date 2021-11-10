@@ -49,11 +49,31 @@ int main(int argc, char *argv[])
 			case SDL_QUIT:
 				terminer = true; break;
 			case SDL_KEYDOWN:
-			switch(evenements.key.keysym.sym)
+			switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
 			{
 				case SDLK_ESCAPE:
 				case SDLK_q:
 					terminer = true; break;
+				case SDLK_LEFT:
+					if(kart.x-1 >0){
+						kart.x -= 1; 
+					}
+					break;
+				case SDLK_RIGHT:
+					if(kart.x+1 < 600-64){
+						kart.x += 1; 
+					}
+					break;
+				case SDLK_UP:
+					if(kart.y-1 > 0){
+						kart.y -= 1; 
+					}
+					break;
+				case SDLK_DOWN:
+					if(kart.y+1 < 600-64){
+						kart.y += 1; 
+					}
+					break;
 			}
 		}
 		SDL_RenderPresent(ecran);

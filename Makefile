@@ -13,5 +13,5 @@ main: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $<
 clean:
 	rm -rf *.o *~
-mrproper: clean
+mrpropre: clean
 	rm -rf $(EXEC)
