@@ -9,6 +9,7 @@ Reecrire le code:
 	- Fichier pour le monde
 	- Fichier pour le graphisme
 	- Remodifier le makefile en consequence
+s
 
 */
 
