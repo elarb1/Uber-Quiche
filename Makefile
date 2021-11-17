@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -W -Wall -ansi -std=c99 -g
-LIBS = -lSDL2_image
+LIBS = -lSDL2_image -lGL
 LDFLAGS = `sdl2-config --cflags --libs `
 INCLUDES =
 EXEC = main

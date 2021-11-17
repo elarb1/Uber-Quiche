@@ -1,4 +1,5 @@
-//la map fait 1024x1024
+//la map fait 1024x768
+//Taille de la map en 3 fois si ca te chante
 //retructurer en differents
 //reecrire le code
 
@@ -19,8 +20,8 @@ Reecrire le code:
 #include "fonctions_SDL.h"
 #include "structures.h"
 
-#define H 1024
-#define V 1024
+#define HEIGHT 1024
+#define WIDTH 1024
 
 
 int main(int argc, char *argv[])
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
 	}
 	// Créer la fenêtre
 	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,
-	SDL_WINDOWPOS_CENTERED, H, V, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
+	SDL_WINDOWPOS_CENTERED, HEIGHT, WIDTH, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
 	if(fenetre == NULL){ // En cas d’erreur
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
 		SDL_Quit();
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case SDLK_RIGHT:
-					if(kart.x+1 < H-64){
+					if(kart.x+1 < HEIGHT-64){
 						kart.x += 1; 
 					}
 					break;
@@ -95,7 +96,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case SDLK_DOWN:
-					if(kart.y+1 < V-64){
+					if(kart.y+1 < WIDTH-64){
 						kart.y += 1; 
 					}
 					break;
