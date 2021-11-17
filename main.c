@@ -29,6 +29,10 @@ int main(int argc, char *argv[])
 {
 	sprite_t kart; 
 	sprite_t quiche3;
+	player_t player;
+
+	player.vie = 0;
+	player.score = 0;
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -84,21 +88,28 @@ int main(int argc, char *argv[])
 				case SDLK_LEFT:
 					if(kart.x-1 >0){ //remodifier pour correspondre au nouvelles variables de la fenetre
 						kart.x -= 1; 
+						quiche3.x -= 1;
+						player.vie += 1;
+						player.score += 1;
+						printf("%d \n", player.vie);
 					}
 					break;
 				case SDLK_RIGHT:
 					if(kart.x+1 < HEIGHT-64){
 						kart.x += 1; 
+						quiche3.x += 1;
 					}
 					break;
 				case SDLK_UP:
 					if(kart.y-1 > 0){
 						kart.y -= 1; 
+						quiche3.y -= 1;
 					}
 					break;
 				case SDLK_DOWN:
 					if(kart.y+1 < WIDTH-64){
 						kart.y += 1; 
+						quiche3.y += 1;
 					}
 					break;
 			}

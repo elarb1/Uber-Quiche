@@ -9,6 +9,11 @@ struct sprite_s{
 };
 typedef struct sprite_s sprite_t;
 
+struct player_s{
+    int vie;
+    int score;
+};
+typedef struct player_s player_t;
 
 
 #endif
