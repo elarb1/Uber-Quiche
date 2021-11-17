@@ -20,16 +20,21 @@ s
 #include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "structures.h"
+#include "camera.h"
 
 #define HEIGHT 1024
 #define WIDTH 1024
+
 
 
 int main(int argc, char *argv[])
 {
 	sprite_t kart; 
 	sprite_t quiche3;
+	sprite_t quiche5;
+
 	player_t player;
+	camera_t camera;
 
 	player.vie = 0;
 	player.score = 0;
@@ -56,7 +61,8 @@ int main(int argc, char *argv[])
 
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
-	SDL_Texture* quiche = charger_image("map.png", ecran);
+	SDL_Texture* quiche = charger_image("background.png", ecran);
+	SDL_Texture* quiche4 = charger_image("map.png", ecran);
 
 	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
 	
@@ -65,15 +71,27 @@ int main(int argc, char *argv[])
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 
 	init_sprite(&quiche3, 50, 50, 64, 64);
-	
+	init_sprite(&quiche5, 1000, 1000, 64, 64);
+	camera.x = 0;
+	camera.y = 0;
 
+	SDL_Rect dstrect;
+			dstrect.x = camera.x;
+		dstrect.y = camera.y;
+		dstrect.h = 240;
+		dstrect.w = 240;
 // Boucle principale
 	while(!terminer)
 	{
 		SDL_RenderClear(ecran);
-		SDL_RenderCopy(ecran, quiche, NULL, NULL);
+		
+
+	
+		SDL_RenderCopy(ecran, quiche, NULL, &dstrect);
+				apply_img(ecran, quiche4, &quiche3);
 		apply_img(ecran, vehicle, &kart);
-		apply_img(ecran, quiche2, &quiche3);
+
+		apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent( &evenements );
 		switch(evenements.type){
 	
@@ -87,28 +105,33 @@ int main(int argc, char *argv[])
 					terminer = true; break;
 				case SDLK_LEFT:
 					if(kart.x-1 >0){ //remodifier pour correspondre au nouvelles variables de la fenetre
-						kart.x -= 1; 
+						kart.x -= 2; 
 						quiche3.x -= 1;
 						player.vie += 1;
 						player.score += 1;
+						dstrect.x -= 1;
+						;
 						printf("%d \n", player.vie);
 					}
 					break;
 				case SDLK_RIGHT:
 					if(kart.x+1 < HEIGHT-64){
-						kart.x += 1; 
+						kart.x += 2; 
 						quiche3.x += 1;
+						dstrect.x += 1;
+		dstrect.y += 1;
 					}
 					break;
 				case SDLK_UP:
 					if(kart.y-1 > 0){
-						kart.y -= 1; 
+						kart.y -= 2; 
 						quiche3.y -= 1;
+						dstrect.y -= 1;
 					}
 					break;
 				case SDLK_DOWN:
 					if(kart.y+1 < WIDTH-64){
-						kart.y += 1; 
+						kart.y += 2; 
 						quiche3.y += 1;
 					}
 					break;
