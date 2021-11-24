@@ -13,7 +13,6 @@ s
 
 */
 
-
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,28 +69,35 @@ int main(int argc, char *argv[])
 
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 
-	init_sprite(&quiche3, 50, 50, 64, 64);
+	init_sprite(&quiche3, -100, -100, 64, 64);
 	init_sprite(&quiche5, 1000, 1000, 64, 64);
+
+
 	camera.x = 0;
 	camera.y = 0;
 
+	//dstrect controle le rectangle d'affichage
 	SDL_Rect dstrect;
-			dstrect.x = camera.x;
-		dstrect.y = camera.y;
-		dstrect.h = 240;
-		dstrect.w = 240;
+		dstrect.x =0;
+		dstrect.y = 0;
+		dstrect.h = 2000;
+		dstrect.w = 2000;
+	int maxx = 200;
 // Boucle principale
 	while(!terminer)
 	{
 		SDL_RenderClear(ecran);
 		
 
-	
-		SDL_RenderCopy(ecran, quiche, NULL, &dstrect);
-				apply_img(ecran, quiche4, &quiche3);
+		//control le renderer
+		//https://wiki.libsdl.org/SDL_RenderCopy
+		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
+		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
+		SDL_RenderCopy(ecran, quiche4, &dstrect, NULL);
+		//apply_img(ecran, quiche4, &quiche3);
 		apply_img(ecran, vehicle, &kart);
 
-		apply_img(ecran, quiche4, &quiche5);
+		//apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent( &evenements );
 		switch(evenements.type){
 	
@@ -109,8 +115,13 @@ int main(int argc, char *argv[])
 						quiche3.x -= 1;
 						player.vie += 1;
 						player.score += 1;
-						dstrect.x -= 1;
-						;
+						printf("%d playerx", kart.x);
+						printf("%d dstx", dstrect.x);
+						//preuve de concept de deplacement de "camera"
+						if(kart.x-1 < maxx){
+							dstrect.x = dstrect.x - 10;
+							maxx = 500;
+						}
 						printf("%d \n", player.vie);
 					}
 					break;
@@ -118,8 +129,14 @@ int main(int argc, char *argv[])
 					if(kart.x+1 < HEIGHT-64){
 						kart.x += 2; 
 						quiche3.x += 1;
-						dstrect.x += 1;
-		dstrect.y += 1;
+						//dstrect.x += 1;
+						//dstrect.y += 1;
+						//preuve de concept de deplacement de "camera"
+						printf("%d playerx", kart.x);
+						if(kart.x-1 > maxx){
+							dstrect.x = dstrect.x + 10;
+
+						}
 					}
 					break;
 				case SDLK_UP:
