@@ -1,5 +1,5 @@
 //la map fait 1024x768
-//Taille de la map en 3 fois si ca te chante
+//Taille de la map en 3 fois si ca te chante wtf
 //retructurer en differents
 //reecrire le code
 
