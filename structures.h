@@ -24,8 +24,9 @@ typedef struct camera_s camera_t;
 struct player_s{
     int vie;
     int score;
+    int tours;
+    int tMin, tSec;
 };
 typedef struct player_s player_t;
-
 
 #endif

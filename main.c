@@ -37,6 +37,9 @@ int main(int argc, char *argv[])
 
 	player.vie = 0;
 	player.score = 0;
+	player.tour = 0;
+	player.tMin = 0;
+	player.tSec = 0;
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -86,8 +89,7 @@ int main(int argc, char *argv[])
 // Boucle principale
 	while(!terminer)
 	{
-		SDL_RenderClear(ecran);
-		
+		SDL_RenderClear(ecran);		
 
 		//control le renderer
 		//https://wiki.libsdl.org/SDL_RenderCopy
