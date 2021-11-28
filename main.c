@@ -21,8 +21,13 @@ s
 #include "structures.h"
 #include "camera.h"
 
-#define HEIGHT 1024
-#define WIDTH 1024
+
+#define LHEIGHT 2000
+#define LWIDTH 2000
+
+
+#define HEIGHT 1000
+#define WIDTH 1000
 
 
 
@@ -37,7 +42,7 @@ int main(int argc, char *argv[])
 
 	player.vie = 0;
 	player.score = 0;
-	player.tour = 0;
+	player.tours = 0;
 	player.tMin = 0;
 	player.tSec = 0;
 
@@ -64,40 +69,44 @@ int main(int argc, char *argv[])
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
-	SDL_Texture* quiche4 = charger_image("map.png", ecran);
+	SDL_Texture* quiche4 = charger_image("map2.png", ecran);
 
-	init_sprite(&kart, 20, 20, 64, 64); //0, 0 est le coin sup gauche
+	init_sprite(&kart, 1024/2-64, 1024/2-64, 64, 64); //0, 0 est le coin sup gauche
 	
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 
-	init_sprite(&quiche3, -100, -100, 64, 64);
-	init_sprite(&quiche5, 1000, 1000, 64, 64);
-
-
-	camera.x = 0;
-	camera.y = 0;
 
 	//dstrect controle le rectangle d'affichage
-	SDL_Rect dstrect;
-		dstrect.x =0;
+
+
+	SDL_Rect dstrect; //camera
+		dstrect.x = 0;
 		dstrect.y = 0;
 		dstrect.h = 2000;
 		dstrect.w = 2000;
-	int maxx = 200;
+
+	SDL_Rect camera2; //camera
+		camera2.x = 1024/2-64;
+		camera2.y = 1024/2-64;
+		camera2.h = 2000;
+		camera2.w = 2000;
+
 // Boucle principale
 	while(!terminer)
 	{
-		SDL_RenderClear(ecran);		
+		
 
 		//control le renderer
 		//https://wiki.libsdl.org/SDL_RenderCopy
 		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
 		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
-		SDL_RenderCopy(ecran, quiche4, &dstrect, NULL);
+		
+		//SDL_RenderCopyEx(ecran, vehicle, NULL, &dstrect, 0, 0, SDL_FLIP_NONE);
 		//apply_img(ecran, quiche4, &quiche3);
-		apply_img(ecran, vehicle, &kart);
+		
+		//SDL_RenderDrawRect(ecran, &dstrect);
 
 		//apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent( &evenements );
@@ -112,34 +121,39 @@ int main(int argc, char *argv[])
 				case SDLK_q:
 					terminer = true; break;
 				case SDLK_LEFT:
-					if(kart.x-1 >0){ //remodifier pour correspondre au nouvelles variables de la fenetre
-						kart.x -= 2; 
-						quiche3.x -= 1;
+					 //remodifier pour correspondre au nouvelles variables de la fenetre
+						kart.x -= 1; 
+						//quiche3.x -= 1;
 						player.vie += 1;
 						player.score += 1;
-						printf("%d playerx", kart.x);
-						printf("%d dstx", dstrect.x);
-						//preuve de concept de deplacement de "camera"
-						if(kart.x-1 < maxx){
-							dstrect.x = dstrect.x - 10;
-							maxx = 500;
+						//printf("%d playerx", kart.x);
+						
+						if(kart.x > 1024-64){
+							kart.x -= 1;
 						}
-						printf("%d \n", player.vie);
-					}
+						//preuve de concept de deplacement de "camera"
+						
+							
+						
+						//printf("%d \n", player.vie);
+					
 					break;
 				case SDLK_RIGHT:
-					if(kart.x+1 < HEIGHT-64){
-						kart.x += 2; 
-						quiche3.x += 1;
+					
+						 
+						//quiche3.x += 1;
 						//dstrect.x += 1;
 						//dstrect.y += 1;
 						//preuve de concept de deplacement de "camera"
-						printf("%d playerx", kart.x);
-						if(kart.x-1 > maxx){
-							dstrect.x = dstrect.x + 10;
+						printf("%d playerx \n", kart.x);
+						printf("%d camx \n", camera2.x);
+						
+							kart.x += 1;
+						
+							
 
-						}
-					}
+						
+					
 					break;
 				case SDLK_UP:
 					if(kart.y-1 > 0){
@@ -156,6 +170,14 @@ int main(int argc, char *argv[])
 					break;
 			}
 		}
+		
+		dstrect.x = -kart.x;
+		//camera2.y = (kart.y+64) - 1024 / 2;
+		
+		SDL_RenderClear(ecran);
+		
+		SDL_RenderCopyEx(ecran, quiche4,NULL, &dstrect, 0, 0, SDL_FLIP_NONE);
+		apply_img(ecran, vehicle, &kart);
 		SDL_RenderPresent(ecran);
 	}
 
