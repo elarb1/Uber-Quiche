@@ -22,12 +22,13 @@ s
 #include "camera.h"
 
 
-#define LHEIGHT 2000
-#define LWIDTH 2000
+#define LEVEL_HEIGHT 3000
+#define LEVEL_WIDTH 4000
 
 
-#define HEIGHT 1000
-#define WIDTH 1000
+#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 640
+
 
 
 
@@ -56,7 +57,7 @@ int main(int argc, char *argv[])
 	}
 	// Créer la fenêtre
 	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,
-	SDL_WINDOWPOS_CENTERED, HEIGHT, WIDTH, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
+	SDL_WINDOWPOS_CENTERED, WINDOW_HEIGHT, WINDOW_WIDTH, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
 	if(fenetre == NULL){ // En cas d’erreur
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
 		SDL_Quit();
@@ -69,9 +70,9 @@ int main(int argc, char *argv[])
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
-	SDL_Texture* quiche4 = charger_image("map2.png", ecran);
+	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
 
-	init_sprite(&kart, 1024/2-64, 1024/2-64, 64, 64); //0, 0 est le coin sup gauche
+	init_sprite(&kart, 1080/2, 1080/2, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 
@@ -84,14 +85,14 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 		dstrect.x = 0;
 		dstrect.y = 0;
-		dstrect.h = 2000;
-		dstrect.w = 2000;
+		dstrect.h = 960;
+		dstrect.w = 1280;
 
 	SDL_Rect camera2; //camera
-		camera2.x = 1024/2-64;
-		camera2.y = 1024/2-64;
-		camera2.h = 2000;
-		camera2.w = 2000;
+		camera2.x = 640/2-64;
+		camera2.y = 480/2-64;
+		camera2.h = 480;
+		camera2.w = 640;
 
 // Boucle principale
 	while(!terminer)
@@ -128,8 +129,8 @@ int main(int argc, char *argv[])
 						player.score += 1;
 						//printf("%d playerx", kart.x);
 						
-						if(kart.x > 1024-64){
-							kart.x -= 1;
+						if(kart.x <0 ){
+							kart.x += 1;
 						}
 						//preuve de concept de deplacement de "camera"
 						
@@ -149,6 +150,7 @@ int main(int argc, char *argv[])
 						printf("%d camx \n", camera2.x);
 						
 							kart.x += 1;
+					
 						
 							
 
@@ -163,21 +165,41 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case SDLK_DOWN:
-					if(kart.y+1 < WIDTH-64){
+					if(kart.y+1 < LEVEL_WIDTH-64){
 						kart.y += 2; 
 						quiche3.y += 1;
 					}
 					break;
 			}
 		}
+		if( ( kart.x < 0 ) || ( kart.x + 64 > 4000-64-32 ) )
+    {
+        //move back
+        kart.x -= 1;
+    }
 		
-		dstrect.x = -kart.x;
+		camera2.x = (kart.x-64/2) - 1080 / 2;
+
+		if(camera2.x < 0){
+			camera2.x = 0;
+		}
+
+		if( camera2.x > 4000 - camera2.w )
+    {
+        camera2.x = 4000 - camera2.w;
+    }
+
+
+	
 		//camera2.y = (kart.y+64) - 1024 / 2;
+
+
 		
 		SDL_RenderClear(ecran);
-		
-		SDL_RenderCopyEx(ecran, quiche4,NULL, &dstrect, 0, 0, SDL_FLIP_NONE);
-		apply_img(ecran, vehicle, &kart);
+
+
+		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
+		apply_img(ecran, vehicle, &kart, camera2.x);
 		SDL_RenderPresent(ecran);
 	}
 
