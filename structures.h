@@ -23,19 +23,19 @@ struct camera_s{
 };
 typedef struct camera_s camera_t;
 
-struct player_s{
-    int vie;
-    int score;
-    int lap;
-    timer_t chronolap[MAX_LAPS];
-};
-typedef struct player_s player_t;
-
-struct timer_s{
+struct chrono_s{
     int min;
     int sec;
     int ms;
 };
-typedef struct timer_s timer_t;
+typedef struct chrono_s chrono_t;
+
+struct player_s{
+    int vie;
+    int score;
+    int lap;
+    chrono_t chronoLap[MAX_LAPS];
+};
+typedef struct player_s player_t;
 
 #endif
