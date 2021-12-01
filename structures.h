@@ -24,9 +24,14 @@ typedef struct camera_s camera_t;
 struct player_s{
     int vie;
     int score;
-    int tours;
-    int tMin, tSec;
 };
 typedef struct player_s player_t;
+
+struct timer_s{
+    int min;
+    int sec;
+    int ms;
+};
+typedef struct timer_s timer_t;
 
 #endif

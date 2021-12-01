@@ -17,6 +17,7 @@ s
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "fonctions_SDL.h"
 #include "structures.h"
 #include "camera.h"
@@ -31,7 +32,6 @@ s
 
 
 
-
 int main(int argc, char *argv[])
 {
 	sprite_t kart; 
@@ -40,12 +40,12 @@ int main(int argc, char *argv[])
 
 	player_t player;
 	camera_t camera;
+	timer_t chrono;
 
-	player.vie = 0;
-	player.score = 0;
-	player.tours = 0;
-	player.tMin = 0;
-	player.tSec = 0;
+	int Uneseconde;
+
+	player = playerReset(player);
+	timeReset(chrono);
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -98,7 +98,6 @@ int main(int argc, char *argv[])
 	while(!terminer)
 	{
 		
-
 		//control le renderer
 		//https://wiki.libsdl.org/SDL_RenderCopy
 		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
@@ -110,7 +109,15 @@ int main(int argc, char *argv[])
 		//SDL_RenderDrawRect(ecran, &dstrect);
 
 		//apply_img(ecran, quiche4, &quiche5);
-		SDL_PollEvent( &evenements );
+		SDL_PollEvent(&evenements);
+
+		Uneseconde = completeSeconde(ms); //ms est le temps du refresh
+
+		if(Unseconde){
+			counter(chrono);
+			Unseconde = 0;
+		}
+
 		switch(evenements.type){
 	
 			case SDL_QUIT:
