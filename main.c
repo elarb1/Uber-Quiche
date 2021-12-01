@@ -21,7 +21,8 @@ s
 #include "fonctions_SDL.h"
 #include "structures.h"
 #include "camera.h"
-#include "Timer.c"
+#include "Timer.h"
+#include "graphics.h"
 
 
 #define LEVEL_HEIGHT 3000
@@ -45,8 +46,8 @@ int main(int argc, char *argv[])
 
 	int Uneseconde;
 
-	player = playerReset(player);
-	timeReset(chrono);
+	//player = playerReset(player);
+	//timeReset(&chrono);
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -112,12 +113,12 @@ int main(int argc, char *argv[])
 		//apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent(&evenements);
 
-		Uneseconde = completeSeconde(ms, chrono); //ms est le temps du refresh
+		//Uneseconde = completeSeconde(ms, chrono); //ms est le temps du refresh
 
-		if(Unseconde){
-			counter(chrono);
+		/*if(Unseconde){
+			counter(&chrono);
 			Unseconde = 0;
-		}
+		}*/
 		
 		/*Pour quand on aura une arriver
 		int n = 0;
@@ -212,12 +213,14 @@ int main(int argc, char *argv[])
 
 
 		
-		SDL_RenderClear(ecran);
+		//refreshCycle(ecran, quiche4, dstrect, vehicle, camera2.x);
+
+		 SDL_RenderClear(ecran);
 
 
-		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
-		apply_img(ecran, vehicle, &kart, camera2.x);
-		SDL_RenderPresent(ecran);
+	SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
+	apply_img(ecran, vehicle, &kart, camera2.x);
+	SDL_RenderPresent(ecran);
 	}
 
 // Boucle principale
