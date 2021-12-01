@@ -9,4 +9,6 @@ int completeSeconde(int ms);
 
 void counter(timer_t* chrono);
 
+timer_t saveChrono(timer_t* t);
+
 #endif

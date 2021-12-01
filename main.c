@@ -21,6 +21,7 @@ s
 #include "fonctions_SDL.h"
 #include "structures.h"
 #include "camera.h"
+#include "Timer.c"
 
 
 #define LEVEL_HEIGHT 3000
@@ -111,12 +112,21 @@ int main(int argc, char *argv[])
 		//apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent(&evenements);
 
-		Uneseconde = completeSeconde(ms); //ms est le temps du refresh
+		Uneseconde = completeSeconde(ms, chrono); //ms est le temps du refresh
 
 		if(Unseconde){
 			counter(chrono);
 			Unseconde = 0;
 		}
+		
+		/*Pour quand on aura une arriver
+		int n = 0;
+
+		if(arriver){
+			player.chronoLap[n] = saveChrono(chrono);
+			n++;
+		}
+		*/
 
 		switch(evenements.type){
 	
