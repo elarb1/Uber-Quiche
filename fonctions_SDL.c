@@ -11,10 +11,10 @@ SDL_Texture* charger_image (const char* nomfichier, SDL_Renderer *renderer){
 	return texture;
 }
 
-void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, sprite_t *sprite){
+void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, sprite_t *sprite, int x){
 	SDL_Rect dst = {0, 0, 0, 0};
 	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
-	dst.x = sprite->x;
+	dst.x = sprite->x - x;
 	dst.y = sprite->y;
 	SDL_RenderCopy(renderer, tex, NULL, &dst);
 }
