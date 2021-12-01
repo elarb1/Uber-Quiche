@@ -21,7 +21,7 @@ s
 #include "fonctions_SDL.h"
 #include "structures.h"
 #include "camera.h"
-#include "Timer.c"
+#include "chrono.h"
 
 
 #define LEVEL_HEIGHT 3000
@@ -30,7 +30,6 @@ s
 
 #define WINDOW_HEIGHT 480
 #define WINDOW_WIDTH 640
-
 
 
 int main(int argc, char *argv[])
@@ -123,7 +122,7 @@ int main(int argc, char *argv[])
 		int n = 0;
 
 		if(arriver){
-			player.chronoLap[n] = saveChrono(chrono);
+			player.chronoLap[n] = chrono;
 			n++;
 		}
 		*/
