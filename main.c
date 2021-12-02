@@ -31,6 +31,8 @@ s
 #define WINDOW_HEIGHT 480
 #define WINDOW_WIDTH 640
 
+#define MOVE_SPEED 1;
+
 
 int main(int argc, char *argv[])
 {
@@ -72,7 +74,7 @@ int main(int argc, char *argv[])
 	SDL_Texture* quiche = charger_image("background.png", ecran);
 	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
 
-	init_sprite(&kart, 1080/2, 1080/2, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	init_sprite(&kart, 1920/2-256/2, 1080/2-256/2, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 
@@ -85,14 +87,16 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 		dstrect.x = 0;
 		dstrect.y = 0;
-		dstrect.h = 960;
-		dstrect.w = 1280;
+		dstrect.h = 1080;
+		dstrect.w = 1920;
 
 	SDL_Rect camera2; //camera
-		camera2.x = 640/2-64;
-		camera2.y = 480/2-64;
+		camera2.x = 0;
+		camera2.y = 0;
 		camera2.h = 480;
 		camera2.w = 640;
+
+		
 
 // Boucle principale
 	while(!terminer)
@@ -112,12 +116,12 @@ int main(int argc, char *argv[])
 		SDL_PollEvent(&evenements);
 
 		//Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
-
+/*
 		if(Uneseconde){
 			counter(&chrono);
 			Uneseconde = 0;
 		}
-		
+		*/
 		/*Pour quand on aura une arriver
 		int n = 0;
 
@@ -156,19 +160,18 @@ int main(int argc, char *argv[])
 					
 					break;
 				case SDLK_RIGHT:
-					
-						 
-						//quiche3.x += 1;
-						//dstrect.x += 1;
-						//dstrect.y += 1;
 						//preuve de concept de deplacement de "camera"
 						printf("%d playerx \n", kart.x);
 						printf("%d camx \n", camera2.x);
 						
 							kart.x += 1;
-					
-						
 							
+					
+								if( ( kart.x < 0 ) || ( kart.x+64/2 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   								 {
+       								 kart.x -= 1;
+   								 }
+									
 
 						
 					
@@ -188,34 +191,15 @@ int main(int argc, char *argv[])
 					break;
 			}
 		}
-		if( ( kart.x < 0 ) || ( kart.x + 64 > 4000-64-32 ) )
-    {
-        //move back
-        kart.x -= 1;
-    }
+
+		camera2.x = (kart.x-64/2) - 1500 / 2;
 		
-		camera2.x = (kart.x-64/2) - 1080 / 2;
-
-		if(camera2.x < 0){
-			camera2.x = 0;
-		}
-
-		if( camera2.x > 4000 - camera2.w )
-    {
-        camera2.x = 4000 - camera2.w;
-    }
-
-
-	
-		//camera2.y = (kart.y+64) - 1024 / 2;
-
-
 		
 		SDL_RenderClear(ecran);
 
-
+		
 		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
-		apply_img(ecran, vehicle, &kart);
+		apply_img(ecran, vehicle, &kart, camera2.x);
 		SDL_RenderPresent(ecran);
 	}
 
