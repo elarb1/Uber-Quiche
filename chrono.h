@@ -5,8 +5,8 @@ void timeReset(chrono_t* t);
 
 void playerReset(player_t* p);
 
-int completeSeconde(int ms, chrono_t* t);
+void counterP(player_t* p, int i);
 
-void counter(chrono_t* t);
+void counterT(chrono_t* t);
 
 #endif

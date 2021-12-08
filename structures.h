@@ -26,7 +26,6 @@ typedef struct camera_s camera_t;
 struct chrono_s{
     int min;
     int sec;
-    int ms;
 };
 typedef struct chrono_s chrono_t;
 

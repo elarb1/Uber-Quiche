@@ -36,15 +36,11 @@ int main(int argc, char *argv[])
 	sprite_t kart; 
 	sprite_t quiche3;
 	sprite_t quiche5;
-
 	player_t player;
-	camera_t camera;
-	chrono_t chrono;
-
-	int Uneseconde = 0;
+	chrono_t gobaltime;
 
 	playerReset(&player);
-	timeReset(&chrono);
+	timeReset(&gobaltime);
 
 	SDL_Window* fenetre; // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
@@ -91,63 +87,83 @@ int main(int argc, char *argv[])
 		camera2.y = 0;
 		camera2.h = 480;
 		camera2.w = 640;
-	int movex = 0;
-	int movey = 0;
-			
+int movex = 0;
+int movey = 0;
+		
+
+// Boucle principale
 	while(!terminer)
 	{
+		
+		//control le renderer
+		//https://wiki.libsdl.org/SDL_RenderCopy
+		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
+		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
 		SDL_PollEvent(&evenements);
 
-		//Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
-		
-		/*
-		if(Uneseconde){
-			counter(&chrono);
-			Uneseconde = 0;
-		}
-		*/
-		
-		/*Pour quand on aura une arriver
-		int n = 0;
+		int x = 0;
+		gobaltime.sec = SDL_GetTicks()/1000;
 
+		counterT(&gobaltime);
+
+		/*
 		if(arriver){
-			player.chronoLap[n] = chrono;
-			n++;
-		}
-		*/
+			player.timeMap[i].sec = globaltime->sec;
+			counterP(player, x);
+			x++;
+		}*/
 
 		switch(evenements.type){
+	
 			case SDL_QUIT:
 				terminer = true; break;
+
 			case SDL_KEYDOWN:
 				switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
 				{
 					case SDLK_ESCAPE:
+
 					case SDLK_q:
 						terminer = true; break;
+
 					case SDLK_LEFT:
+						//remodifier pour correspondre au nouvelles variables de la fenetre
 						movex -= 1; 
-						if((kart.x < 0) || (kart.x-100 > 4000))
+
+						//preuve de concept de deplacement de "camera"
+						if((kart.x < 0) || (kart.x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movex += 1;
    						}
+						//printf("%d \n", player.vie);
+					
 					break;
+
 					case SDLK_RIGHT:
+						//preuve de concept de deplacement de "camera"
+						printf("%d playerx \n", kart.y);
+						printf("%d camx \n", camera2.y);
+						
 						movex += 1;
+							
 						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movex -= 1;
    						}
 					break;
+
 					case SDLK_UP:
 						movey -= 1;
+
 						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movey += 1;
    						} 
 					break;
+
 				case SDLK_DOWN:
 					movey += 1;
+				
 					if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    					{
        					movey -= 1;
@@ -160,15 +176,23 @@ int main(int argc, char *argv[])
 		kart.y = movey;
 		camera2.x = (kart.x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
 		camera2.y = (kart.y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
-
+		
 		SDL_RenderClear(ecran);
+
 		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
 		apply_img(ecran, vehicle, &kart, camera2.x, camera2.y);
 		SDL_RenderPresent(ecran);
 	}
+
+	// Boucle principale
+
+	// Libérer de la mémoire
 	IMG_Quit();
 	SDL_DestroyRenderer(ecran);
+	//Quitter SDL ...
+	// Quitter SDL
 	SDL_DestroyWindow(fenetre);
+
 	SDL_Quit();
 	return 0;
 }
