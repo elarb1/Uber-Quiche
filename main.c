@@ -104,13 +104,15 @@ int main(int argc, char *argv[])
 		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
 		SDL_PollEvent(&evenements);
 
-		//Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
-/*
+		Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
+		
+		/*
 		if(Uneseconde){
 			counter(&chrono);
 			Uneseconde = 0;
 		}
 		*/
+		
 		/*Pour quand on aura une arriver
 		int n = 0;
 
@@ -124,61 +126,60 @@ int main(int argc, char *argv[])
 	
 			case SDL_QUIT:
 				terminer = true; break;
+
 			case SDL_KEYDOWN:
-			switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
-			{
-				case SDLK_ESCAPE:
-				case SDLK_q:
-					terminer = true; break;
-				case SDLK_LEFT:
-					 //remodifier pour correspondre au nouvelles variables de la fenetre
+				switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
+				{
+					case SDLK_ESCAPE:
+
+					case SDLK_q:
+						terminer = true; break;
+
+					case SDLK_LEFT:
+						//remodifier pour correspondre au nouvelles variables de la fenetre
 						kart.x -= 1; 
 
 						//preuve de concept de deplacement de "camera"
-						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   								 {
-       								 kart.x += 1;
-   								 }
+						if((kart.x < 0) || (kart.x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
+   						{
+       						kart.x += 1;
+   						}
 							
 						
 						//printf("%d \n", player.vie);
 					
 					break;
-				case SDLK_RIGHT:
+
+					case SDLK_RIGHT:
 						//preuve de concept de deplacement de "camera"
 						printf("%d playerx \n", kart.y);
 						printf("%d camx \n", camera2.y);
 						
-							kart.x += 1;
+						kart.x += 1;
 							
-					
-								if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   								 {
-       								 kart.x -= 1;
-   								 }
-									
-
-						
-					
+						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   						{
+       						kart.x -= 1;
+   						}
 					break;
-				case SDLK_UP:
 
-						kart.y -= 1; 
+					case SDLK_UP:
+						kart.y -= 1;
+
 						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   								 {
-       								 kart.y += 1;
-   								 } 
-
+   						{
+       						kart.y += 1;
+   						} 
 					break;
+
 				case SDLK_DOWN:
-
-						kart.y += 1;
-							if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   								 {
-       								 kart.y -= 1;
-   								 } 
-	
-					break;
+					kart.y += 1;
+				
+					if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   					{
+       					kart.y -= 1;
+   					} 
+				break;
 			}
 		}
 
@@ -194,13 +195,13 @@ int main(int argc, char *argv[])
 		SDL_RenderPresent(ecran);
 	}
 
-// Boucle principale
+	// Boucle principale
 
-// Libérer de la mémoire
+	// Libérer de la mémoire
 	IMG_Quit();
 	SDL_DestroyRenderer(ecran);
-//Quitter SDL ...
-// Quitter SDL
+	//Quitter SDL ...
+	// Quitter SDL
 	SDL_DestroyWindow(fenetre);
 
 	SDL_Quit();
