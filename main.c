@@ -91,18 +91,11 @@ int main(int argc, char *argv[])
 		camera2.y = 0;
 		camera2.h = 480;
 		camera2.w = 640;
-int movex = 0;
-int movey = 0;
-		
-
-// Boucle principale
+	int movex = 0;
+	int movey = 0;
+			
 	while(!terminer)
 	{
-		
-		//control le renderer
-		//https://wiki.libsdl.org/SDL_RenderCopy
-		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
-		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
 		SDL_PollEvent(&evenements);
 
 		//Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
@@ -124,58 +117,37 @@ int movey = 0;
 		*/
 
 		switch(evenements.type){
-	
 			case SDL_QUIT:
 				terminer = true; break;
-
 			case SDL_KEYDOWN:
 				switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
 				{
 					case SDLK_ESCAPE:
-
 					case SDLK_q:
 						terminer = true; break;
-
 					case SDLK_LEFT:
-						//remodifier pour correspondre au nouvelles variables de la fenetre
 						movex -= 1; 
-
-						//preuve de concept de deplacement de "camera"
-						if((kart.x < 0) || (kart.x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
+						if((kart.x < 0) || (kart.x-100 > 4000))
    						{
        						movex += 1;
    						}
-							
-						
-						//printf("%d \n", player.vie);
-					
 					break;
-
 					case SDLK_RIGHT:
-						//preuve de concept de deplacement de "camera"
-						printf("%d playerx \n", kart.y);
-						printf("%d camx \n", camera2.y);
-						
 						movex += 1;
-							
 						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movex -= 1;
    						}
 					break;
-
 					case SDLK_UP:
 						movey -= 1;
-
 						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movey += 1;
    						} 
 					break;
-
 				case SDLK_DOWN:
 					movey += 1;
-				
 					if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    					{
        					movey -= 1;
@@ -183,29 +155,20 @@ int movey = 0;
 				break;
 			}
 		}
+
         kart.x = movex;
 		kart.y = movey;
 		camera2.x = (kart.x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
 		camera2.y = (kart.y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
-		
-		
-		SDL_RenderClear(ecran);
 
-		
+		SDL_RenderClear(ecran);
 		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
 		apply_img(ecran, vehicle, &kart, camera2.x, camera2.y);
 		SDL_RenderPresent(ecran);
 	}
-
-	// Boucle principale
-
-	// Libérer de la mémoire
 	IMG_Quit();
 	SDL_DestroyRenderer(ecran);
-	//Quitter SDL ...
-	// Quitter SDL
 	SDL_DestroyWindow(fenetre);
-
 	SDL_Quit();
 	return 0;
 }
