@@ -93,7 +93,8 @@ int main(int argc, char *argv[])
 		camera2.w = 640;
 
 		
-
+	int movex = 0;
+	int movey = 0;
 // Boucle principale
 	while(!terminer)
 	{
@@ -121,6 +122,8 @@ int main(int argc, char *argv[])
 			n++;
 		}
 		*/
+
+	
 
 		switch(evenements.type){
 	
@@ -163,33 +166,35 @@ int main(int argc, char *argv[])
    						}
 					break;
 
-					case SDLK_UP:
-						kart.y -= 1;
 
+						movey -= 1; 
+						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   								 {
 						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
-       						kart.y += 1;
    						} 
+					break;
+
+
+						movey += 1;
+							if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   								 {
+       								 kart.y -= 1;
+   								 } 
+	
 					break;
 
 				case SDLK_DOWN:
 					kart.y += 1;
 				
-					if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   					{
-       					kart.y -= 1;
-   					} 
-				break;
-			}
-		}
-
+		kart.x = movex;
+		kart.y = movey;
 		camera2.x = (kart.x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
 		camera2.y = (kart.y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
 		
 		
 		SDL_RenderClear(ecran);
 
-		
 		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
 		apply_img(ecran, vehicle, &kart, camera2.x, camera2.y);
 		SDL_RenderPresent(ecran);
