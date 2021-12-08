@@ -102,13 +102,6 @@ int main(int argc, char *argv[])
 		//https://wiki.libsdl.org/SDL_RenderCopy
 		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
 		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
-		
-		//SDL_RenderCopyEx(ecran, vehicle, NULL, &dstrect, 0, 0, SDL_FLIP_NONE);
-		//apply_img(ecran, quiche4, &quiche3);
-		
-		//SDL_RenderDrawRect(ecran, &dstrect);
-
-		//apply_img(ecran, quiche4, &quiche5);
 		SDL_PollEvent(&evenements);
 
 		//Uneseconde = completeSeconde(ms, chrono); //ms, le temps du refresh
@@ -142,7 +135,10 @@ int main(int argc, char *argv[])
 						kart.x -= 1; 
 
 						//preuve de concept de deplacement de "camera"
-						
+						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   								 {
+       								 kart.x += 1;
+   								 }
 							
 						
 						//printf("%d \n", player.vie);
@@ -168,6 +164,10 @@ int main(int argc, char *argv[])
 				case SDLK_UP:
 
 						kart.y -= 1; 
+						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   								 {
+       								 kart.y += 1;
+   								 } 
 
 					break;
 				case SDLK_DOWN:
