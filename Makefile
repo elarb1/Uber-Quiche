@@ -4,7 +4,7 @@ LIBS = -lSDL2_image -lGL
 LDFLAGS = `sdl2-config --cflags --libs `
 INCLUDES =
 EXEC = main
-SRC = main.c fonctions_SDL.c camera.c chrono.c
+SRC = main.c fonctions_SDL.c chrono.c
 OBJ = $(SRC:.c=.o)
 all: $(EXEC)
 main: $(OBJ)

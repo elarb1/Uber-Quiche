@@ -20,7 +20,6 @@ s
 
 #include "fonctions_SDL.h"
 #include "structures.h"
-#include "camera.h"
 #include "chrono.h"
 
 
@@ -30,6 +29,132 @@ s
 #define WINDOW_WIDTH 1280
 #define MOVE_SPEED 1
 
+int movex, movey = 0;
+
+void init(SDL_Renderer* renderer, SDL_Window* fenetre);
+void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2);
+void renderer();
+
+int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height)
+{
+    if(0 != SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO))
+    {
+        fprintf(stderr, "Erreur initialisation de la SDL : %s", SDL_GetError());
+        return -1;
+    }
+    if(0 != SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_SHOWN, window, renderer))
+    {
+        fprintf(stderr, "Erreur lors de la creation de l'image et du renderer : %s", SDL_GetError());
+        return -1;
+    }
+    return 0;
+}
+
+
+void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart){
+	SDL_RenderClear(ecran);
+
+	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
+	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
+	SDL_RenderPresent(ecran);
+}
+
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* dstrect, SDL_Rect* camera2){ //catch error
+	if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
+		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
+		SDL_Quit();
+	}
+
+	// Créer la fenêtre
+	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
+	if(fenetre == NULL){ // En cas d’erreur
+		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
+		SDL_Quit();
+	}
+
+	renderer = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
+
+	dstrect.x = 0;
+		dstrect.y = 0;
+		dstrect.h = WINDOW_HEIGHT;
+		dstrect.w = WINDOW_WIDTH;
+
+		camera2.x = 0;
+		camera2.y = 0;
+		camera2.h = 480;
+		camera2.w = 640;
+
+			init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+}
+
+void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2){
+   
+       switch(event->type){
+	
+			case SDL_QUIT:
+				terminer = true; break;
+
+			case SDL_KEYDOWN:
+				switch(event->key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
+				{
+					case SDLK_ESCAPE:
+
+					case SDLK_q:
+						terminer = true; break;
+
+					case SDLK_LEFT:
+						//remodifier pour correspondre au nouvelles variables de la fenetre
+						movex -= 1; 
+
+						//preuve de concept de deplacement de "camera"
+						if((kart->x < 0) || (kart->x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
+   						{
+       						movex += 1;
+   						}
+						//printf("%d \n", player.vie);
+					
+					break;
+
+					case SDLK_RIGHT:
+						//preuve de concept de deplacement de "camera"
+						printf("%d playerx \n", kart->y);
+						printf("%d camx \n", camera2->y);
+						
+						movex += 10;
+							
+						if( ( kart->x < 0 ) || ( kart->x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   						{
+       						movex -= 1;
+   						}
+					break;
+
+					case SDLK_UP:
+						movey -= 1;
+
+						if( ( kart->y < 0 ) || ( kart->y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   						{
+       						movey += 1;
+   						} 
+					break;
+
+				case SDLK_DOWN:
+					movey += 1;
+				
+					if( ( kart->y < 0 ) || ( kart->y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+   					{
+       					movey -= 1;
+   					} 
+				break;
+			}
+		}
+
+		SDL_Delay(10);
+        kart->x = movex;
+		kart->y = movey;
+
+		camera2->x = (kart->x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
+		camera2->y = (kart->y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
+}
 
 int main(int argc, char *argv[])
 {
@@ -42,31 +167,32 @@ int main(int argc, char *argv[])
 	playerReset(&player);
 	timeReset(&gobaltime);
 
-	SDL_Window* fenetre; // Déclaration de la fenêtre
+	 // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
 	bool terminer = false;
-	if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
+	
+
+	SDL_Window* fenetre;
+	SDL_Renderer* ecran;
+if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
 		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
 		SDL_Quit();
-		return EXIT_FAILURE;
 	}
+
 	// Créer la fenêtre
 	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
 	if(fenetre == NULL){ // En cas d’erreur
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
 		SDL_Quit();
-		return EXIT_FAILURE;
 	}
 
-
-	SDL_Renderer* ecran;
-
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
+	//init(ecran, fenetre);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
 	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
 
-	init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+
 	
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 
@@ -77,18 +203,11 @@ int main(int argc, char *argv[])
 
 
 	SDL_Rect dstrect; //camera
-		dstrect.x = 0;
-		dstrect.y = 0;
-		dstrect.h = WINDOW_HEIGHT;
-		dstrect.w = WINDOW_WIDTH;
+		
 
 	SDL_Rect camera2; //camera
-		camera2.x = 0;
-		camera2.y = 0;
-		camera2.h = 480;
-		camera2.w = 640;
-int movex = 0;
-int movey = 0;
+
+
 		
 
 // Boucle principale
@@ -100,8 +219,14 @@ int movey = 0;
 		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
 		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
 		SDL_PollEvent(&evenements);
+		movement(&evenements, terminer, &kart, &camera2);
+		switch(evenements.type){
+			case SDL_QUIT:
+				terminer = true;
+                 break;
+        }
 
-		int x = 0;
+		int x = 0; //clock
 		gobaltime.sec = SDL_GetTicks()/1000;
 
 		counterT(&gobaltime);
@@ -113,75 +238,9 @@ int movey = 0;
 			x++;
 		}*/
 
-		switch(evenements.type){
-	
-			case SDL_QUIT:
-				terminer = true; break;
-
-			case SDL_KEYDOWN:
-				switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
-				{
-					case SDLK_ESCAPE:
-
-					case SDLK_q:
-						terminer = true; break;
-
-					case SDLK_LEFT:
-						//remodifier pour correspondre au nouvelles variables de la fenetre
-						movex -= 1; 
-
-						//preuve de concept de deplacement de "camera"
-						if((kart.x < 0) || (kart.x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
-   						{
-       						movex += 1;
-   						}
-						//printf("%d \n", player.vie);
-					
-					break;
-
-					case SDLK_RIGHT:
-						//preuve de concept de deplacement de "camera"
-						printf("%d playerx \n", kart.y);
-						printf("%d camx \n", camera2.y);
-						
-						movex += 1;
-							
-						if( ( kart.x < 0 ) || ( kart.x-100 > 4000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   						{
-       						movex -= 1;
-   						}
-					break;
-
-					case SDLK_UP:
-						movey -= 1;
-
-						if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   						{
-       						movey += 1;
-   						} 
-					break;
-
-				case SDLK_DOWN:
-					movey += 1;
-				
-					if( ( kart.y < 0 ) || ( kart.y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
-   					{
-       					movey -= 1;
-   					} 
-				break;
-			}
-		}
-
-        kart.x = movex;
-		kart.y = movey;
-		camera2.x = (kart.x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
-		camera2.y = (kart.y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
+		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart);
 		
-		SDL_RenderClear(ecran);
-
-		SDL_RenderCopyEx(ecran, quiche4,&camera2, &dstrect, 0, 0, SDL_FLIP_NONE);
-		apply_img(ecran, vehicle, &kart, camera2.x, camera2.y);
-		SDL_RenderPresent(ecran);
+		
 	}
 
 	// Boucle principale
