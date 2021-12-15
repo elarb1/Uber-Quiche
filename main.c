@@ -74,17 +74,7 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* dstrect, SDL_
 
 	renderer = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 
-	dstrect.x = 0;
-		dstrect.y = 0;
-		dstrect.h = WINDOW_HEIGHT;
-		dstrect.w = WINDOW_WIDTH;
 
-		camera2.x = 0;
-		camera2.y = 0;
-		camera2.h = 480;
-		camera2.w = 640;
-
-			init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 }
 
 void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2){
@@ -207,6 +197,17 @@ if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
 
 	SDL_Rect camera2; //camera
 
+	dstrect.x = 0;
+		dstrect.y = 0;
+		dstrect.h = WINDOW_HEIGHT;
+		dstrect.w = WINDOW_WIDTH;
+
+		camera2.x = 0;
+		camera2.y = 0;
+		camera2.h = 480;
+		camera2.w = 640;
+
+			init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 
 		
 
