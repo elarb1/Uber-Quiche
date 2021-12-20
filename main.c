@@ -31,7 +31,7 @@ s
 
 int movex, movey = 0;
 
-void init(SDL_Renderer* renderer, SDL_Window* fenetre);
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect);
 void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2);
 void renderer();
 
@@ -59,22 +59,20 @@ void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_
 	SDL_RenderPresent(ecran);
 }
 
-void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* dstrect, SDL_Rect* camera2){ //catch error
-	if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
-		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
-		SDL_Quit();
-	}
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect){ //catch error
+	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	// Créer la fenêtre
-	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
-	if(fenetre == NULL){ // En cas d’erreur
-		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
-		SDL_Quit();
-	}
+	//renderer = SDL_CreateRenderer(&fenetre, -1, SDL_RENDERER_ACCELERATED);
 
-	renderer = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
+		dstrect->x = 0;
+		dstrect->y = 0;
+		dstrect->h = WINDOW_HEIGHT;
+		dstrect->w = WINDOW_WIDTH;
 
-
+		camera2->x = 0;
+		camera2->y = 0;
+		camera2->h = 480;
+		camera2->w = 640;
 }
 
 void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2){
@@ -160,65 +158,26 @@ int main(int argc, char *argv[])
 	 // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
 	bool terminer = false;
-	
-
 	SDL_Window* fenetre;
 	SDL_Renderer* ecran;
-if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
-		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
-		SDL_Quit();
-	}
+	
+	SDL_Rect dstrect; //camera
+	SDL_Rect camera2; //camera
 
-	// Créer la fenêtre
-	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE); //set variables to be modifiable
-	if(fenetre == NULL){ // En cas d’erreur
-		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
-		SDL_Quit();
-	}
-
-	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
-	//init(ecran, fenetre);
+	init(&ecran, &fenetre, &camera2, &dstrect);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
 	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
-
-
-	
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
-
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 
-
-	//dstrect controle le rectangle d'affichage
-
-
-	SDL_Rect dstrect; //camera
-		
-
-	SDL_Rect camera2; //camera
-
-	dstrect.x = 0;
-		dstrect.y = 0;
-		dstrect.h = WINDOW_HEIGHT;
-		dstrect.w = WINDOW_WIDTH;
-
-		camera2.x = 0;
-		camera2.y = 0;
-		camera2.h = 480;
-		camera2.w = 640;
-
-			init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 
 		
 
 // Boucle principale
 	while(!terminer)
 	{
-		
-		//control le renderer
-		//https://wiki.libsdl.org/SDL_RenderCopy
-		//les deux dernieres controlent ce qui est envoyee, la premiere la source de l'image sur un tilset, le deuxieme est l'emplacement sur l'ecran
-		//le premier param sert a appliquer le renderer, le deuxieme c'est le fond a appliquer
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2);
 		switch(evenements.type){
@@ -231,7 +190,6 @@ if(SDL_Init(SDL_INIT_VIDEO) < 0){ // Initialisation de la SDL
 		gobaltime.sec = SDL_GetTicks()/1000;
 
 		counterT(&gobaltime);
-
 		/*
 		if(arriver){
 			player.timeMap[i].sec = globaltime->sec;
