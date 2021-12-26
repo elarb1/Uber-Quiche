@@ -51,10 +51,11 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 }
 
 
-void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart){
+void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi){
 	SDL_RenderClear(ecran);
 
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
+	apply_img(ecran, ennemi_tex, ennemi, camera2->x, camera2->y);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
 	SDL_RenderPresent(ecran);
 }
@@ -73,6 +74,8 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 		camera2->y = 0;
 		camera2->h = 480;
 		camera2->w = 640;
+
+	//init_sprite(ennemi, 64, 64, 64, 64);
 }
 
 void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2){
@@ -149,6 +152,7 @@ int main(int argc, char *argv[])
 	sprite_t kart; 
 	sprite_t quiche3;
 	sprite_t quiche5;
+	sprite_t ennemi;
 	player_t player;
 	chrono_t gobaltime;
 
@@ -170,9 +174,10 @@ int main(int argc, char *argv[])
 	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
+	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
 
 	init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-
+	init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 		
 
 // Boucle principale
@@ -197,7 +202,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart);
+		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi);
 		
 		
 	}
