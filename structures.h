@@ -6,8 +6,8 @@
 #define LIMITE_W 100
 #define LIMITE_H 80
 #define MAX_LAPS 3
-#define LEVEL_HEIGHT 3000
-#define LEVEL_WIDTH 4000
+#define LEVEL_HEIGHT 1687
+#define LEVEL_WIDTH 3000
 #define WINDOW_HEIGHT 720
 #define WINDOW_WIDTH 1280
 #define MOVE_SPEED 1
