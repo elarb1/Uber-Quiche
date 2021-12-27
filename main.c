@@ -22,6 +22,7 @@ s
 #include "structures.h"
 #include "chrono.h"
 #include "functions_main.h"
+#include "collision.h"
 
 int main(int argc, char *argv[])
 {
@@ -44,7 +45,7 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 	SDL_Rect camera2; //camera
 
-	init(&ecran, &fenetre, &camera2, &dstrect);
+	init(&ecran, &fenetre, &camera2, &dstrect, kart);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
 	SDL_Texture* quiche4 = charger_image("map.png", ecran);
@@ -53,7 +54,8 @@ int main(int argc, char *argv[])
 	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
 
 	init_sprite(&kart, 2649, 649, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-	init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
+	init_sprite(&ennemi, 2220, 620, 44, 54);
+	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 		
 
 // Boucle principale
@@ -61,6 +63,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2);
+		collision(&kart, &ennemi);
 		switch(evenements.type){
 			case SDL_QUIT:
 				terminer = true;
