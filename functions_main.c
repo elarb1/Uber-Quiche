@@ -4,6 +4,15 @@
 int movex = 2649; 
 int movey = 649;
 
+bool collision(sprite_t* r1, sprite_t* r2){
+  if( !(r2->x > (r1->x + r1->w) || (r2->x + r2->w) < r1->x ||  r2->y > (r1->y + r1->h) ||(r2->y + r2->h) < r1->y)){
+  	r2->x=0;
+  	r2->y=0;
+  	r2->w=0;
+  	r2->h=0;
+  }
+}
+
 int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height)
 {
     if(0 != SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO))
