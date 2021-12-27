@@ -47,12 +47,12 @@ int main(int argc, char *argv[])
 	init(&ecran, &fenetre, &camera2, &dstrect);
 
 	SDL_Texture* quiche = charger_image("background.png", ecran);
-	SDL_Texture* quiche4 = charger_image("bg2.png", ecran);
+	SDL_Texture* quiche4 = charger_image("map.png", ecran);
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
 
-	init_sprite(&kart, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	init_sprite(&kart, 2649, 649, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 		
 
