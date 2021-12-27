@@ -4,12 +4,12 @@
 int movex = 2649; 
 int movey = 649;
 
-bool collision(sprite_t* r1, sprite_t* r2){
-  if( !(r2->x > (r1->x + r1->w) || (r2->x + r2->w) < r1->x ||  r2->y > (r1->y + r1->h) ||(r2->y + r2->h) < r1->y)){
-  	r2->x=0;
-  	r2->y=0;
-  	r2->w=0;
-  	r2->h=0;
+bool collision(sprite_t* a, sprite_t* b){
+  if( !(b->x > (a->x + a->w) || (b->x + b->w) < a->x ||  b->y > (a->y + a->h) ||(b->y + b->h) < a->y)){
+  	b->x=0;
+  	b->y=0;
+  	b->w=0;
+  	b->h=0;
   }
 }
 
