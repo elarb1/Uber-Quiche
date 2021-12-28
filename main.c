@@ -22,7 +22,7 @@ s
 #include "structures.h"
 #include "chrono.h"
 #include "functions_main.h"
-#include "collision.h"
+//#include "collision.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,10 +30,13 @@ int main(int argc, char *argv[])
 	sprite_t quiche3;
 	sprite_t quiche5;
 	sprite_t ennemi;
+	sprite_t quiche;
 	player_t player;
 	chrono_t gobaltime;
 
-	playerReset(&player);
+	player.score=0;
+
+	//playerReset(&player);
 	timeReset(&gobaltime);
 
 	 // Déclaration de la fenêtre
@@ -47,14 +50,16 @@ int main(int argc, char *argv[])
 
 	init(&ecran, &fenetre, &camera2, &dstrect, kart);
 
-	SDL_Texture* quiche = charger_image("background.png", ecran);
+
 	SDL_Texture* quiche4 = charger_image("map.png", ecran);
 	SDL_Texture* vehicle = charger_image("kart.png", ecran);
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
+	SDL_Texture* quiche_tex = charger_image("square.png", ecran);
 
 	init_sprite(&kart, 2649, 649, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	init_sprite(&ennemi, 2220, 620, 44, 54);
+	init_sprite(&quiche, 2500, 720, 64, 64);
 	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 		
 
@@ -63,7 +68,8 @@ int main(int argc, char *argv[])
 	{
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2);
-		collision(&kart, &ennemi);
+		update_states(&player, &kart, &ennemi, &quiche);
+		//printf("score: %d", player.score);
 		switch(evenements.type){
 			case SDL_QUIT:
 				terminer = true;
@@ -81,7 +87,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi);
+		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche);
 		
 		
 	}

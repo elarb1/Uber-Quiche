@@ -4,13 +4,30 @@
 int movex = 2649; 
 int movey = 649;
 
-bool collision(sprite_t* a, sprite_t* b){
+void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche){
+			int coll = collision(kart, ennemi);
+		int coll2 = collision(kart, quiche);
+		if(coll == 1){
+			player->score -=1;
+			printf("score: %d \n", player->score);
+			//printf("yes: %d", collision(&kart, &ennemi));
+		}
+		if(coll2 == 1){
+			player->score +=1;
+			printf("score: %d \n", player->score);
+			//printf("yes: %d", collision(&kart, &ennemi));
+		}
+}
+
+int collision(sprite_t* a, sprite_t* b){
   if( !(b->x > (a->x + a->w) || (b->x + b->w) < a->x ||  b->y > (a->y + a->h) ||(b->y + b->h) < a->y)){
   	b->x=0;
   	b->y=0;
   	b->w=0;
   	b->h=0;
+	return 1;
   }
+  return 0;
 }
 
 int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height)
@@ -29,10 +46,11 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 }
 
 
-void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi){
+void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche){
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
 	apply_img(ecran, ennemi_tex, ennemi, camera2->x, camera2->y);
+	apply_img(ecran, quiche_tex, quiche, camera2->x, camera2->y);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
 	SDL_RenderPresent(ecran);
 }
