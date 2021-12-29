@@ -57,18 +57,22 @@ int main(int argc, char *argv[])
 	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
 	SDL_Texture* quiche_tex = charger_image("square.png", ecran);
 
-	init_sprite(&kart, 2649, 649, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-	init_sprite(&ennemi, 2220, 620, 44, 54);
+	init_sprite(&kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	init_sprite(&ennemi, 2000, 620, 64, 64);
 	init_sprite(&quiche, 2500, 720, 64, 64);
 	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
+
+	sprite_t r;
+	init_sprite(&r, 1010, 750, 1500, 450);
+
 		
 
 // Boucle principale
 	while(!terminer)
 	{
 		SDL_PollEvent(&evenements);
-		movement(&evenements, terminer, &kart, &camera2);
-		update_states(&player, &kart, &ennemi, &quiche);
+		movement(&evenements, terminer, &kart, &camera2, &r);
+		update_states(&player, &kart, &ennemi, &quiche, &r);
 		//printf("score: %d", player.score);
 		switch(evenements.type){
 			case SDL_QUIT:

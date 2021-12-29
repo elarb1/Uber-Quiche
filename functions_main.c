@@ -4,9 +4,10 @@
 int movex = 2649; 
 int movey = 649;
 
-void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche){
+void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r){
 			int coll = collision(kart, ennemi);
 		int coll2 = collision(kart, quiche);
+		int coll3 = collision_test(kart, r);
 		if(coll == 1){
 			player->score -=1;
 			printf("score: %d \n", player->score);
@@ -17,6 +18,10 @@ void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t*
 			printf("score: %d \n", player->score);
 			//printf("yes: %d", collision(&kart, &ennemi));
 		}
+		if(coll3 == 1){
+			printf("yes");
+			//printf("yes: %d", collision(&kart, &ennemi));
+		}
 }
 
 int collision(sprite_t* a, sprite_t* b){
@@ -25,6 +30,20 @@ int collision(sprite_t* a, sprite_t* b){
   	b->y=0;
   	b->w=0;
   	b->h=0;
+	return 1;
+  }
+  return 0;
+}
+
+int collision2(sprite_t* a, sprite_t* b){
+  if( !(b->x > (a->x + a->w) || (b->x + b->w) < a->x ||  b->y > (a->y + a->h) ||(b->y + b->h) < a->y)){
+	return 1;
+  }
+  return 0;
+}
+
+int collision_test(sprite_t* a, sprite_t* b){
+  if((a->x - a->w) == (b->x + b->w)){
 	return 1;
   }
   return 0;
@@ -49,8 +68,8 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche){
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
-	apply_img(ecran, ennemi_tex, ennemi, camera2->x, camera2->y);
-	apply_img(ecran, quiche_tex, quiche, camera2->x, camera2->y);
+	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
+	apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
 	SDL_RenderPresent(ecran);
 }
@@ -74,7 +93,7 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 
 }
 
-void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2){
+void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2, sprite_t* r){
    
        switch(event->type){
 	
@@ -98,6 +117,9 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
    						{
        						movex += 10;
    						}
+						if(collision2(kart, r) == 1){
+							movex +=50;
+						}
 						//printf("%d \n", player.vie);
 					
 					break;
@@ -113,6 +135,9 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
    						{
        						movex -= 10;
    						}
+						if(collision2(kart, r) == 1){
+							movex -=50;
+						}
 					break;
 
 					case SDLK_UP:
@@ -122,6 +147,9 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
    						{
        						movey += 10;
    						} 
+						if(collision2(kart, r) == 1){
+							movey +=50;
+						}
 					break;
 
 				case SDLK_DOWN:
@@ -131,6 +159,9 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
    					{
        					movey -= 10;
    					} 
+					if(collision2(kart, r) == 1){
+						movey -=50;
+					}
 				break;
 			}
 		}

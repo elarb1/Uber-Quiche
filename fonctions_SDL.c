@@ -19,6 +19,7 @@ void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, sprite_t *sprite, int x
 	SDL_RenderCopy(renderer, tex, NULL, &dst);
 }
 
+
 void init_sprite(sprite_t *sprite, int x, int y, int w, int h){
 	sprite->x = x;
 	sprite->y = y;
