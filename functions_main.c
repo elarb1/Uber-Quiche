@@ -4,6 +4,71 @@
 int movex = 2649; 
 int movey = 649;
 
+void ennemi_movement_ypos(sprite_t* ennemi, sprite_t* r){
+	printf("%d \n", ennemi->vel);
+	if(ennemi->y < 270){
+		ennemi->vel = -1;
+	}
+	if(collision2(ennemi, r) == 1){
+		printf("hi");
+		ennemi->vel = 1;
+	}
+	if(ennemi->vel >0){
+		ennemi->y -=1;
+	}else{
+		ennemi->y +=1;
+	}
+}
+
+void ennemi_movement_yneg(sprite_t* ennemi, sprite_t* r){
+	if(ennemi->y > 1500){
+		ennemi->vel = 1;
+	}
+	if(collision2(ennemi, r) == 1){
+		ennemi->vel = -1;
+	}
+
+	if(ennemi->vel >0){
+		ennemi->y -=1;
+	}else{
+		ennemi->y +=1;
+	}
+}
+
+void ennemi_movement_xright(sprite_t* ennemi, sprite_t* r){ //le rendering de la map est se distorte legerement et fait que la perspective de la vue est changee
+	printf("%d \n", ennemi->x);
+	printf("%d\n", ennemi->vel);
+	if(ennemi->x > 3000){
+		ennemi->vel = 1;
+	}
+	if(collision2(ennemi, r) == 1){
+		ennemi->vel = -1;
+	}
+
+	if(ennemi->vel >0){
+		ennemi->x -=1;
+	}else{
+		ennemi->x +=1;
+	}
+}
+
+void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la map est se distorte legerement et fait que la perspective de la vue est changee
+	printf("%d \n", ennemi->x);
+	printf("%d\n", ennemi->vel);
+	if(ennemi->x < 500){
+		ennemi->vel = -1;
+	}
+	if(collision2(ennemi, r) == 1){
+		ennemi->vel = +1;
+	}
+
+	if(ennemi->vel >0){
+		ennemi->x -=1;
+	}else{
+		ennemi->x +=1;
+	}
+}
+
 void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r){
 			int coll = collision(kart, ennemi);
 		int coll2 = collision(kart, quiche);
@@ -22,6 +87,7 @@ void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t*
 			printf("yes");
 			//printf("yes: %d", collision(&kart, &ennemi));
 		}
+		ennemi_movement_xleft(ennemi, r);
 }
 
 int collision(sprite_t* a, sprite_t* b){
@@ -69,12 +135,12 @@ void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
 	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
-	apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
+	//apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
 	SDL_RenderPresent(ecran);
 }
 
-void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart){ //catch error
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart, sprite_t* ennemi){ //catch error
 	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	//renderer = SDL_CreateRenderer(&fenetre, -1, SDL_RENDERER_ACCELERATED);
@@ -88,6 +154,8 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 		camera2->y = 0;
 		camera2->h = 480;
 		camera2->w = 640;
+
+	ennemi->vel = 1;
 
 	//init_sprite(ennemi, 64, 64, 64, 64);
 

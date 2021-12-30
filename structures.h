@@ -17,6 +17,7 @@ struct sprite_s{
     int y; //pos en y
     int h; //hauteur
     int w; //largeur
+    int vel; //pour l'ennemi
 };
 typedef struct sprite_s sprite_t;
 

@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 	SDL_Rect camera2; //camera
 
-	init(&ecran, &fenetre, &camera2, &dstrect, kart);
+	init(&ecran, &fenetre, &camera2, &dstrect, kart, &ennemi);
 
 
 	SDL_Texture* quiche4 = charger_image("map.png", ecran);
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	SDL_Texture* quiche_tex = charger_image("square.png", ecran);
 
 	init_sprite(&kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-	init_sprite(&ennemi, 2000, 620, 64, 64);
+	init_sprite(&ennemi, 500, 700, 64, 64); //ca fonctionne correctement quand on met les memes valeurs que le kart, mais pas sans
 	init_sprite(&quiche, 2500, 720, 64, 64);
 	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 
