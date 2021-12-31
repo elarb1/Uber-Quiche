@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -W -Wall -ansi -std=c99 -g
 LIBS = -lSDL2_image -lGL
-LDFLAGS = `sdl2-config --cflags --libs `
+LDFLAGS = `sdl2-config --cflags --libs ` -lSDL2_ttf
 INCLUDES =
 EXEC = main
 SRC = main.c fonctions_SDL.c functions_main.c chrono.c

@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
 	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
 	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
 	SDL_Texture* quiche_tex = charger_image("square.png", ecran);
+	TTF_Font* font = load_font("arial.ttf", 14); 
+
+	
 
 	init_sprite(&kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	init_sprite(&ennemi, 500, 700, 64, 64); //ca fonctionne correctement quand on met les memes valeurs que le kart, mais pas sans
@@ -63,7 +66,7 @@ int main(int argc, char *argv[])
 	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 
 	sprite_t r;
-	init_sprite(&r, 1010, 750, 1500, 450);
+	init_sprite(&r, 1010, 720, 1500, 450);
 
 		
 
@@ -91,7 +94,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche);
+		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche);
 		
 		
 	}
@@ -100,6 +103,7 @@ int main(int argc, char *argv[])
 
 	// Libérer de la mémoire
 	IMG_Quit();
+	TTF_Quit();
 	SDL_DestroyRenderer(ecran);
 	//Quitter SDL ...
 	// Quitter SDL

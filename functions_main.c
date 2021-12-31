@@ -4,6 +4,8 @@
 int movex = 2649; 
 int movey = 649;
 
+
+
 void ennemi_movement_ypos(sprite_t* ennemi, sprite_t* r){
 	printf("%d \n", ennemi->vel);
 	if(ennemi->y < 270){
@@ -129,19 +131,21 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
     }
     return 0;
 }
+void apply_text(SDL_Renderer* renderer, int x, int y, int w, int h, const char* text, TTF_Font* font);
 
-
-void renderer(SDL_Renderer* ecran, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche){
+void renderer(SDL_Renderer* ecran, TTF_Font* font, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche){
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
 	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
 	//apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
+	apply_text(ecran, 0, 0, 50, 50, "hi", font);
 	SDL_RenderPresent(ecran);
 }
 
 void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart, sprite_t* ennemi){ //catch error
 	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+	init_ttf();
 
 	//renderer = SDL_CreateRenderer(&fenetre, -1, SDL_RENDERER_ACCELERATED);
 
