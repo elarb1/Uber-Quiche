@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
 	sprite_t quiche3;
 	sprite_t quiche5;
 	sprite_t ennemi;
+	sprite_t ennemi2;
+	sprite_t ennemi3;
+	sprite_t ennemi4;
 	sprite_t quiche;
 	player_t player;
 	chrono_t gobaltime;
@@ -48,7 +51,7 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 	SDL_Rect camera2; //camera
 
-	init(&ecran, &fenetre, &camera2, &dstrect, kart, &ennemi);
+	init(&ecran, &fenetre, &camera2, &dstrect, kart, &ennemi, &player, &ennemi2, &ennemi3, &ennemi4);
 
 
 	SDL_Texture* quiche4 = charger_image("map.png", ecran);
@@ -61,7 +64,10 @@ int main(int argc, char *argv[])
 	
 
 	init_sprite(&kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-	init_sprite(&ennemi, 500, 700, 64, 64); //ca fonctionne correctement quand on met les memes valeurs que le kart, mais pas sans
+	init_sprite(&ennemi, 500, 900, 64, 64);
+	init_sprite(&ennemi2, 2500, 900, 64, 64);
+	init_sprite(&ennemi3, 1500, 1000, 64, 64);
+	init_sprite(&ennemi4, 1500, 500, 64, 64); //ca fonctionne correctement quand on met les memes valeurs que le kart, mais pas sans
 	init_sprite(&quiche, 2500, 720, 64, 64);
 	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 
@@ -78,7 +84,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2, &r);
-		update_states(&player, &kart, &ennemi, &quiche, &r, &finish);
+		update_states(&player, &kart, &ennemi, &quiche, &r, &finish, &ennemi2, &ennemi3, &ennemi4);
 		//printf("score: %d", player.score);
 		switch(evenements.type){
 			case SDL_QUIT:
@@ -97,7 +103,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche, &player);
+		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche, &player, &ennemi2, &ennemi3, &ennemi4);
 		
 		
 	}

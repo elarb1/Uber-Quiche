@@ -18,6 +18,7 @@ struct sprite_s{
     int h; //hauteur
     int w; //largeur
     int vel; //pour l'ennemi
+    int isVisible;
 };
 typedef struct sprite_s sprite_t;
 
@@ -45,5 +46,6 @@ struct player_s{
     chrono_t chronoLap[MAX_LAPS];
 };
 typedef struct player_s player_t;
+
 
 #endif
