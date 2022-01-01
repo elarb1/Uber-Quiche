@@ -2,10 +2,10 @@
 
 void points_manager(player_t* player){
     /*if(collision_quiche == 1){
-        player->score ++;
+        player->score++;
     } 
     if(collision_back == 1){
-        player->score --;
+        player->score--;
     }
     if(player->chrono[lap] <= benchmark){ //benchmark est le temps de tour reference
         player->score++;
@@ -22,14 +22,16 @@ void score_write(player_t* player){
     score_file = fopen("/scores/scores.txt", "a+");
 
     if(score_file == NULL){
-        printf("error");
+        printf("error !");
         error = 1;
     }
+
     if(error == 0){
         printf("Entrez votre nom: ");
         scanf("%s", &name);
         fprintf("score de %s: %d", name, player->score);
     }
+
     fclose(score_file);
 }
 

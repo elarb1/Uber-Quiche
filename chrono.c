@@ -14,7 +14,7 @@ void playerReset(player_t* p){
     p->score = 0;
     p->lap = 0;
 
-    for(int i = 0; i < MAX_LAPS; i++){
+    for(int i = 0; i < LAPS; i++){
         p->chronoLap[i].min = 0;
         p->chronoLap[i].sec = 0;
     }

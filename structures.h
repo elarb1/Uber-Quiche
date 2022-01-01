@@ -5,7 +5,7 @@
 #define LIMITE_Y 220
 #define LIMITE_W 100
 #define LIMITE_H 80
-#define MAX_LAPS 3
+#define LAPS 3
 #define LEVEL_HEIGHT 1687
 #define LEVEL_WIDTH 3000
 #define WINDOW_HEIGHT 720
@@ -18,7 +18,6 @@ struct sprite_s{
     int h; //hauteur
     int w; //largeur
     int vel; //pour l'ennemi
-    int isVisible;
 };
 typedef struct sprite_s sprite_t;
 
@@ -43,9 +42,8 @@ struct player_s{
     int deltaTime;
 	int lastTime;
     int win;
-    chrono_t chronoLap[MAX_LAPS];
+    chrono_t chronoLap[LAPS];
 };
 typedef struct player_s player_t;
-
 
 #endif
