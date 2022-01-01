@@ -4,6 +4,27 @@
 int movex = 2649; 
 int movey = 649;
 
+int hasWon(player_t* player){
+	if(player->score == 4 && player->lap == 3){
+		player->win = 1;
+	return 1;
+	}else{
+		if(player->score < 4 && player->lap == 3){
+			player->win = -1;
+			return 2;
+		}
+	}
+	return 0;
+}
+
+
+void lap(sprite_t* kart, sprite_t* finish, player_t* player){
+	if(collision2(kart, finish) == 1 && (player->deltaTime > 100)){
+		player->lap +=1;
+		player->deltaTime = 0;
+	}
+
+}
 
 
 void ennemi_movement_ypos(sprite_t* ennemi, sprite_t* r){
@@ -71,7 +92,8 @@ void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la 
 	}
 }
 
-void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r){
+void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish){
+	
 			int coll = collision(kart, ennemi);
 		int coll2 = collision(kart, quiche);
 		int coll3 = collision_test(kart, r);
@@ -89,7 +111,11 @@ void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t*
 			printf("yes");
 			//printf("yes: %d", collision(&kart, &ennemi));
 		}
+		/*int time = SDL_GetTicks();
+		player->deltaTime = time - player->lastTime;
+		player->lastTime = SDL_GetTicks();*/
 		ennemi_movement_xleft(ennemi, r);
+		lap(kart, finish, player);
 }
 
 int collision(sprite_t* a, sprite_t* b){
@@ -133,17 +159,22 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 }
 void apply_text(SDL_Renderer* renderer, int x, int y, int w, int h, const char* text, TTF_Font* font);
 
-void renderer(SDL_Renderer* ecran, TTF_Font* font, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche){
+void renderer(SDL_Renderer* ecran, TTF_Font* font, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche, player_t* player){
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
 	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
 	//apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
-	apply_text(ecran, 0, 0, 50, 50, "hi", font);
+	player->deltaTime +=1;
+	//systeme de print a l'ecran (texte)
+	char score[20];
+	sprintf(score, "score : %d", player->score);
+	apply_text(ecran, 0, 0, 100, 100, score, font);
+	//systeme de print au dessus
 	SDL_RenderPresent(ecran);
 }
 
-void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart, sprite_t* ennemi){ //catch error
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart, sprite_t* ennemi, player_t* player){ //catch error
 	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 	init_ttf();
 

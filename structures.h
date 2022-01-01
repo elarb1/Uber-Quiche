@@ -39,6 +39,9 @@ struct player_s{
     int vie;
     int score;
     int lap;
+    int deltaTime;
+	int lastTime;
+    int win;
     chrono_t chronoLap[MAX_LAPS];
 };
 typedef struct player_s player_t;

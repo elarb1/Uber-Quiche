@@ -68,6 +68,9 @@ int main(int argc, char *argv[])
 	sprite_t r;
 	init_sprite(&r, 1010, 720, 1500, 450);
 
+	sprite_t finish;
+	init_sprite(&finish, 2600, 750, 358, 1);
+
 		
 
 // Boucle principale
@@ -75,7 +78,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2, &r);
-		update_states(&player, &kart, &ennemi, &quiche, &r);
+		update_states(&player, &kart, &ennemi, &quiche, &r, &finish);
 		//printf("score: %d", player.score);
 		switch(evenements.type){
 			case SDL_QUIT:
@@ -94,7 +97,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche);
+		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche, &player);
 		
 		
 	}
