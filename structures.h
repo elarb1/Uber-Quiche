@@ -10,7 +10,7 @@
 #define LEVEL_WIDTH 3000
 #define WINDOW_HEIGHT 720
 #define WINDOW_WIDTH 1280
-#define MOVE_SPEED 1
+#define MOVE_SPEED 10
 
 struct sprite_s{
     int x; //pos en x
@@ -18,6 +18,7 @@ struct sprite_s{
     int h; //hauteur
     int w; //largeur
     int vel; //pour l'ennemi
+    int isVisible;
 };
 typedef struct sprite_s sprite_t;
 
@@ -46,4 +47,12 @@ struct player_s{
 };
 typedef struct player_s player_t;
 
+struct world_s{
+    SDL_Texture* bg;
+    SDL_Texture* player_tex;
+    SDL_Texture* ennemi_tex;
+    SDL_Texture* quiche_tex;
+    TTF_Font* font;
+};
+typedef struct world_s world_t;
 #endif

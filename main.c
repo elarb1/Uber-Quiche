@@ -26,7 +26,8 @@ s
 
 int main(int argc, char *argv[])
 {
-	sprite_t kart, quiche3, quiche5, ennemi, quiche;
+	world_t world;
+	sprite_t kart, ennemi, quiche;
 	sprite_t ennemi2;
 	sprite_t ennemi3;
 	sprite_t ennemi4;
@@ -52,26 +53,15 @@ int main(int argc, char *argv[])
 	SDL_Rect dstrect; //camera
 	SDL_Rect camera2; //camera
 
-	init(&ecran, &fenetre, &camera2, &dstrect, kart, &ennemi, &player, &ennemi2, &ennemi3, &ennemi4);
+	init(&ecran, &fenetre, &camera2, &dstrect, &kart, &ennemi, &player, &ennemi2, &ennemi3, &ennemi4, &quiche);
+	init_textures(&world, ecran);
 
 
-	SDL_Texture* quiche4 = charger_image("map.png", ecran);
-	SDL_Texture* vehicle = charger_image("kart.png", ecran);
-	SDL_Texture* quiche2 = charger_image("quiche.png", ecran);
-	SDL_Texture* ennemi_tex = charger_image("square.png", ecran);
-	SDL_Texture* quiche_tex = charger_image("square.png", ecran);
-	TTF_Font* font = load_font("arial.ttf", 14); 
+//	SDL_Texture* quiche4 = charger_image("map.png", ecran);
+	
 
 	
 
-	init_sprite(&kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
-	init_sprite(&ennemi, 500, 700, 64, 64); //ca fonctionne correctement quand on met les memes valeurs que le kart, mais pas sans
-	init_sprite(&quiche, 2500, 720, 64, 64);
-		init_sprite(&ennemi, 500, 900, 64, 64);
-	init_sprite(&ennemi2, 2500, 900, 64, 64);
-	init_sprite(&ennemi3, 1500, 1000, 64, 64);
-	init_sprite(&ennemi4, 1500, 500, 64, 64);
-	//init_sprite(&ennemi, WINDOW_WIDTH/2-256, WINDOW_HEIGHT/4, 64, 64);
 
 	sprite_t r;
 	init_sprite(&r, 1010, 720, 1500, 450);
@@ -86,8 +76,7 @@ int main(int argc, char *argv[])
 	{
 		SDL_PollEvent(&evenements);
 		movement(&evenements, terminer, &kart, &camera2, &r);
-		update_states(&player, &kart, &ennemi, &quiche, &r, &finish, &ennemi2, &ennemi3, &ennemi4);
-		//printf("score: %d", player.score);
+		update_states(&player, &kart, &ennemi, &quiche, &r, &finish, &ennemi2, &ennemi3, &ennemi4, tlimit);
 		switch(evenements.type){
 			case SDL_QUIT:
 				terminer = true;
@@ -105,18 +94,13 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, font, quiche4, &camera2, &dstrect, vehicle, &kart, ennemi_tex, &ennemi, quiche_tex, &quiche, &player, &ennemi2, &ennemi3, &ennemi4);
+		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world, tlimit);
 		
 	}
 
-	// Boucle principale
-
-	// Libérer de la mémoire
 	IMG_Quit();
 	TTF_Quit();
 	SDL_DestroyRenderer(ecran);
-	//Quitter SDL ...
-	// Quitter SDL
 	SDL_DestroyWindow(fenetre);
 
 	SDL_Quit();
