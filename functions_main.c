@@ -98,26 +98,26 @@ void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la 
 void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4){
 	
 			int coll = collision(kart, ennemi);
-		int coll2 = collision(kart, quiche);
-		int coll3 = collision_test(kart, r);
-		if(coll == 1){
+		int coll2 = collision(kart, ennemi2);
+		int coll3 = collision(kart, ennemi3);
+		int coll4 = collision(kart, ennemi4);
+		int coll5 = collision(kart, quiche);
+		int coll6 = collision_test(kart, r);
+		if(coll == 1 || coll2 == 1|| coll3 == 1|| coll4 == 1){
 			player->score -=1;
 			printf("score: %d \n", player->score);
 			//printf("yes: %d", collision(&kart, &ennemi));
 		}
-		if(coll2 == 1){
+		if(coll5 == 1){
 			player->score +=1;
-			printf("score: %d \n", player->score);
-			//printf("yes: %d", collision(&kart, &ennemi));
-		}
-		if(coll3 == 1){
-			printf("yes");
-			//printf("yes: %d", collision(&kart, &ennemi));
 		}
 		/*int time = SDL_GetTicks();
 		player->deltaTime = time - player->lastTime;
 		player->lastTime = SDL_GetTicks();*/
 		ennemi_movement_xleft(ennemi, r);
+		ennemi_movement_xright(ennemi2, r);
+		ennemi_movement_yneg(ennemi3, r);
+		ennemi_movement_ypos(ennemi4, r);
 		lap(kart, finish, player);
 }
 
@@ -127,6 +127,7 @@ int collision(sprite_t* a, sprite_t* b){
   	b->y=0;
   	b->w=0;
   	b->h=0;
+	   b->isVisible = 1;
 	return 1;
   }
   return 0;
@@ -164,7 +165,20 @@ void apply_text(SDL_Renderer* renderer, int x, int y, int w, int h, const char* 
 
 void renderer(SDL_Renderer* ecran, TTF_Font* font, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4){
 	SDL_RenderClear(ecran);
-	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
+		SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
+	if(ennemi->isVisible != 1){
+		apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi2->isVisible != 1){
+		apply_img(ecran, ennemi_tex, ennemi2, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi3->isVisible != 1){
+		apply_img(ecran, ennemi_tex, ennemi3, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi4->isVisible != 1){
+		apply_img(ecran, ennemi_tex, ennemi4, camera2->x-64, camera2->y-64);
+	}	
+	apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
 	//apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
 	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
@@ -194,6 +208,9 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 		camera2->w = 640;
 
 	ennemi->vel = 1;
+	ennemi2->vel = 1;
+	ennemi3->vel = 1;
+	ennemi4->vel = 1;
 
 	//init_sprite(ennemi, 64, 64, 64, 64);
 
