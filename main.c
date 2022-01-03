@@ -4,13 +4,7 @@
 //reecrire le code
 
 /*
-Reecrire le code: 
-	- Tout le main est rearange dans d'autres fichiers
-	- Fichier pour le monde
-	- Fichier pour le graphisme
-	- Remodifier le makefile en consequence
-s
-
+c'est devenu un sokoban xD
 */
 
 #include <SDL2/SDL.h>
@@ -20,11 +14,13 @@ s
 
 #include "fonctions_SDL.h"
 #include "structures.h"
-#include "player.h"
+#include "chrono.h"
 #include "functions_main.h"
+#include "score.h"
+#include "end_menu_renderers.h"
 //#include "collision.h"
 
-int main()
+int main(int argc, char *argv[])
 {
 	world_t world;
 	sprite_t kart, ennemi, quiche;
@@ -40,6 +36,7 @@ int main()
 	tlimit.sec = 30;
 
 	player.score = 0;
+	world.status = 0;
 	
 	//playerReset(&player);
 	timeReset(&globaltime);
@@ -52,8 +49,9 @@ int main()
 	
 	SDL_Rect dstrect; //camera
 	SDL_Rect camera2; //camera
+	SDL_Rect kart_coord;
 
-	init(&ecran, &fenetre, &camera2, &dstrect, &kart, &ennemi, &player, &ennemi2, &ennemi3, &ennemi4, &quiche);
+	init(&ecran, &fenetre, &camera2, &dstrect, &kart, &ennemi, &player, &ennemi2, &ennemi3, &ennemi4, &quiche, &kart_coord);
 	init_textures(&world, ecran);
 
 
@@ -68,22 +66,37 @@ int main()
 
 	sprite_t finish;
 	init_sprite(&finish, 2600, 750, 358, 1);
-
-		
-
-// Boucle principale
-	while(!terminer)
-	{
+	while(world.status==0){
 		SDL_PollEvent(&evenements);
-		movement(&evenements, terminer, &kart, &camera2, &r);
-		update_states(&player, &kart, &ennemi, &quiche, &r, &finish, &ennemi2, &ennemi3, &ennemi4, tlimit);
 		switch(evenements.type){
 			case SDL_QUIT:
-				terminer = true;
+				world.status = 3;
+                break;
+			case SDL_KEYDOWN:
+				switch(evenements.key.keysym.sym) //temporairement on empeche le kart de sortir avant la mise en place de la camera
+				{
+					case SDLK_SPACE:
+						world.status = 1;
+						break;
+        	}
+		}
+		menu_renderer(ecran, world);
+	}
+		
+
+// Game loop
+	while(world.status == 1)
+	{
+		SDL_PollEvent(&evenements);
+		movement(&evenements, terminer, &kart, &camera2, &r, &kart_coord);
+		update_states(&player, &kart, &ennemi, &quiche, &r, &finish, &ennemi2, &ennemi3, &ennemi4, tlimit, &world);
+		switch(evenements.type){
+			case SDL_QUIT:
+				world.status = 3;
                  break;
         }
 
-		//int x = 0; //clock
+		int x = 0; //clock
 		globaltime.sec = SDL_GetTicks()/1000;
 
 		counterT(&globaltime);
@@ -94,8 +107,18 @@ int main()
 			x++;
 		}*/
 
-		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world);
+		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world, tlimit, &kart_coord);
 		
+	}
+
+	while(world.status==2){
+		SDL_PollEvent(&evenements);
+		switch(evenements.type){
+			case SDL_QUIT:
+				world.status = 3;
+                break;
+		}
+		end_renderer(ecran, world);
 	}
 
 	IMG_Quit();
