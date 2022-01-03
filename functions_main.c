@@ -1,4 +1,5 @@
 #include "functions_main.h"
+#include "fonctions_SDL.h"
 #include "structures.h"
 
 int movex = 2649; 
@@ -12,10 +13,10 @@ int hasWon(player_t* player, chrono_t tlimit){
 			player->win = 1;
 			result = 1;
 		}else if(player->score < 4){
-			player->win = 0;
+			player->win = 2;
 			result = 2;
 		}else if((player->chronoLap[LAPS].min > tlimit.min) || (player->chronoLap[LAPS].min == tlimit.min && player->chronoLap[LAPS].sec > tlimit.sec)){
-			player->win = 0;
+			player->win = 3;
 			result = 3;
 		}
 	}
@@ -62,8 +63,6 @@ void ennemi_movement_yneg(sprite_t* ennemi, sprite_t* r){
 }
 
 void ennemi_movement_xright(sprite_t* ennemi, sprite_t* r){ //le rendering de la map est se distorte legerement et fait que la perspective de la vue est changee
-	printf("%d \n", ennemi->x);
-	printf("%d\n", ennemi->vel);
 	if(ennemi->x > 3000){
 		ennemi->vel = 1;
 	}
@@ -79,8 +78,6 @@ void ennemi_movement_xright(sprite_t* ennemi, sprite_t* r){ //le rendering de la
 }
 
 void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la map est se distorte legerement et fait que la perspective de la vue est changee
-	printf("%d \n", ennemi->x);
-	printf("%d\n", ennemi->vel);
 	if(ennemi->x < 500){
 		ennemi->vel = -1;
 	}
@@ -95,30 +92,32 @@ void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la 
 	}
 }
 
-void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4){
+void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, chrono_t tlimit){
 	
 			int coll = collision(kart, ennemi);
-		int coll2 = collision(kart, quiche);
-		int coll3 = collision_test(kart, r);
-		if(coll == 1){
+		int coll2 = collision(kart, ennemi2);
+		int coll3 = collision(kart, ennemi3);
+		int coll4 = collision(kart, ennemi4);
+		int coll5 = collision(kart, quiche);
+		if(coll == 1 || coll2 == 1|| coll3 == 1|| coll4 == 1){
 			player->score -=1;
-			printf("score: %d \n", player->score);
-			//printf("yes: %d", collision(&kart, &ennemi));
 		}
-		if(coll2 == 1){
+		if(coll5 == 1){
 			player->score +=1;
-			printf("score: %d \n", player->score);
-			//printf("yes: %d", collision(&kart, &ennemi));
 		}
-		if(coll3 == 1){
-			printf("yes");
-			//printf("yes: %d", collision(&kart, &ennemi));
-		}
-		/*int time = SDL_GetTicks();
-		player->deltaTime = time - player->lastTime;
-		player->lastTime = SDL_GetTicks();*/
 		ennemi_movement_xleft(ennemi, r);
+		ennemi_movement_xright(ennemi2, r);
+		ennemi_movement_yneg(ennemi3, r);
+		ennemi_movement_ypos(ennemi4, r);
 		lap(kart, finish, player);
+		hasWon(player, tlimit);
+		printf("win? %d\n", player->win);
+		printf("lap? %d\n", player->lap);
+
+		if(player->win != 0){
+			score_write(player);
+		}
+
 }
 
 int collision(sprite_t* a, sprite_t* b){
@@ -127,6 +126,7 @@ int collision(sprite_t* a, sprite_t* b){
   	b->y=0;
   	b->w=0;
   	b->h=0;
+	   b->isVisible = 1;
 	return 1;
   }
   return 0;
@@ -160,28 +160,62 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
     return 0;
 }
 
-void apply_text(SDL_Renderer* renderer, int x, int y, int w, int h, const char* text, TTF_Font* font);
 
-void renderer(SDL_Renderer* ecran, TTF_Font* font, SDL_Texture* quiche4, SDL_Rect* camera2, SDL_Rect* dstrect, SDL_Texture* vehicle, sprite_t* kart, SDL_Texture* ennemi_tex, sprite_t* ennemi, SDL_Texture* quiche_tex, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4){
+void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, world_t* world, chrono_t tlimit){
 	SDL_RenderClear(ecran);
-	SDL_RenderCopyEx(ecran, quiche4,camera2, dstrect, 0, 0, SDL_FLIP_NONE);	
-	apply_img(ecran, ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
-	//apply_img(ecran, quiche_tex, quiche, camera2->x-64, camera2->y-64);
-	apply_img(ecran, vehicle, kart, camera2->x, camera2->y);
+		SDL_RenderCopyEx(ecran, world->bg,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
+	if(ennemi->isVisible != 1){
+		apply_img(ecran, world->ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi2->isVisible != 1){
+		apply_img(ecran, world->ennemi_tex, ennemi2, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi3->isVisible != 1){
+		apply_img(ecran, world->ennemi_tex, ennemi3, camera2->x-64, camera2->y-64);
+	}	
+	if(ennemi4->isVisible != 1){
+		apply_img(ecran, world->ennemi_tex, ennemi4, camera2->x-64, camera2->y-64);
+	}	
+	apply_img(ecran, world->quiche_tex, quiche, camera2->x-64, camera2->y-64);
+	apply_img(ecran, world->player_tex, kart, camera2->x, camera2->y);
 	player->deltaTime +=1;
 	//systeme de print a l'ecran (texte)
 	char score[20];
 	sprintf(score, "score : %d", player->score);
-	apply_text(ecran, 0, 0, 100, 100, score, font);
+	apply_text(ecran, 0, 0, 100, 100, score, world->font);
+	if(player->win == 1){
+		apply_text(ecran, 100, 100, 100, 100, "victoire", world->font);
+	}
+	if(player->win == 2 || player->win == 3){
+		apply_text(ecran, 100, 100, 100, 100, "no", world->font);
+	}
 	//systeme de print au dessus
 	SDL_RenderPresent(ecran);
+	
 }
 
-void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t kart, sprite_t* ennemi, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4){ //catch error
+void init_textures(world_t* world, SDL_Renderer* ecran){
+	world->bg = charger_image("map.png", ecran);
+	world->player_tex = charger_image("kart.png", ecran);
+	world->ennemi_tex = charger_image("square.png", ecran);
+	world->quiche_tex = charger_image("square.png", ecran);
+	world->font = load_font("arial.ttf", 14); 
+}
+
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, sprite_t* quiche){
 	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 	init_ttf();
 
-	//renderer = SDL_CreateRenderer(&fenetre, -1, SDL_RENDERER_ACCELERATED);
+
+	init_sprite(kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	
+	init_sprite(ennemi, 500, 700, 64, 64);
+	init_sprite(ennemi, 500, 900, 64, 64);
+	init_sprite(ennemi2, 2500, 900, 64, 64);
+	init_sprite(ennemi3, 1500, 1000, 64, 64);
+	init_sprite(ennemi4, 1500, 500, 64, 64);
+
+	init_sprite(quiche, 2500, 720, 64, 64);
 
 		dstrect->x = 0;
 		dstrect->y = 0;
@@ -194,8 +228,13 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 		camera2->w = 640;
 
 	ennemi->vel = 1;
+	ennemi2->vel = 1;
+	ennemi3->vel = 1;
+	ennemi4->vel = 1;
 
-	//init_sprite(ennemi, 64, 64, 64, 64);
+	player->score = 0;
+	player->win = 0;
+
 
 }
 
@@ -216,17 +255,16 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 
 					case SDLK_LEFT:
 						//remodifier pour correspondre au nouvelles variables de la fenetre
-						movex -= 10; 
+						movex -= MOVE_SPEED; 
 
 						//preuve de concept de deplacement de "camera"
 						if((kart->x < 600) || (kart->x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
-       						movex += 10;
+       						movex += MOVE_SPEED;
    						}
 						if(collision2(kart, r) == 1){
-							movex +=50;
+							movex +=MOVE_SPEED * 5;
 						}
-						//printf("%d \n", player.vie);
 					
 					break;
 
@@ -235,38 +273,38 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 						printf("%d playerx \n", kart->x);
 						printf("%d camx \n", camera2->x);
 						
-						movex += 10;
+						movex += MOVE_SPEED;
 							
 						if( ( kart->x < 0 ) || ( kart->x-100 > 2750 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
-       						movex -= 10;
+       						movex -= MOVE_SPEED;
    						}
 						if(collision2(kart, r) == 1){
-							movex -=50;
+							movex -=MOVE_SPEED * 5;
 						}
 					break;
 
 					case SDLK_UP:
-						movey -= 10;
+						movey -= MOVE_SPEED;
 
 						if( ( kart->y < 300 ) || ( kart->y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
-       						movey += 10;
+       						movey += MOVE_SPEED;
    						} 
 						if(collision2(kart, r) == 1){
-							movey +=50;
+							movey +=MOVE_SPEED * 5;
 						}
 					break;
 
 				case SDLK_DOWN:
-					movey += 10;
+					movey += MOVE_SPEED;
 				
 					if( ( kart->y < 0 ) || ( kart->y-64 > 1300 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    					{
-       					movey -= 10;
+       					movey -= MOVE_SPEED;
    					} 
 					if(collision2(kart, r) == 1){
-						movey -=50;
+						movey -=MOVE_SPEED * 5;
 					}
 				break;
 			}
