@@ -20,11 +20,11 @@ s
 
 #include "fonctions_SDL.h"
 #include "structures.h"
-#include "chrono.h"
+#include "player.h"
 #include "functions_main.h"
 //#include "collision.h"
 
-int main(int argc, char *argv[])
+int main()
 {
 	world_t world;
 	sprite_t kart, ennemi, quiche;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                  break;
         }
 
-		int x = 0; //clock
+		//int x = 0; //clock
 		globaltime.sec = SDL_GetTicks()/1000;
 
 		counterT(&globaltime);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world, tlimit);
+		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world);
 		
 	}
 
