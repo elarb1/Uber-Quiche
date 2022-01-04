@@ -178,11 +178,16 @@ void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_
 	char score[20];
 	sprintf(score, "score : %d", player->score);
 	apply_text(ecran, 0, 0, 100, 100, score, world->font);
+	char lap[20];
+	sprintf(lap, "lap : %d", player->lap);
+	apply_text(ecran, 0, 70, 100, 100, lap, world->font);
 	if(player->win == 1){
 		apply_text(ecran, 100, 100, 100, 100, "victoire", world->font);
+		SDL_Delay(20);
 	}
 	if(player->win == 2 || player->win == 3){
 		apply_text(ecran, 100, 100, 100, 100, "no", world->font);
+		SDL_Delay(20);
 	}
 	//systeme de print au dessus
 	SDL_RenderPresent(ecran);
@@ -234,6 +239,7 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 
 	player->score = 0;
 	player->win = 0;
+	player->lap = 0;
 
 	kart->direction = 0;
 }

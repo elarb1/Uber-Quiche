@@ -9,7 +9,7 @@
 #define LIMITE_Y 220
 #define LIMITE_W 100
 #define LIMITE_H 80
-#define LAPS 4
+#define LAPS 3
 #define LEVEL_HEIGHT 1687
 #define LEVEL_WIDTH 3000
 #define WINDOW_HEIGHT 720
