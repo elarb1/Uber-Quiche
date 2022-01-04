@@ -32,12 +32,11 @@ void lap(sprite_t* kart, sprite_t* finish, player_t* player){
 }
 
 void ennemi_movement_ypos(sprite_t* ennemi, sprite_t* r){
-	printf("%d \n", ennemi->vel);
 	if(ennemi->y < 270){
 		ennemi->vel = -1;
 	}
 	if(collision2(ennemi, r) == 1){
-		printf("hi");
+
 		ennemi->vel = 1;
 	}
 	if(ennemi->vel >0){
@@ -111,8 +110,7 @@ void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t*
 		ennemi_movement_ypos(ennemi4, r);
 		lap(kart, finish, player);
 		hasWon(player, tlimit);
-		printf("win? %d\n", player->win);
-		printf("lap? %d\n", player->lap);
+
 
 		if(player->win != 0){
 			score_write(player);
@@ -285,8 +283,6 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 
 					case SDLK_RIGHT:
 						//preuve de concept de deplacement de "camera"
-						printf("%d playerx \n", kart->x);
-						printf("%d camx \n", camera2->x);
 						
 						movex += MOVE_SPEED;
 							kart->direction = 3;
