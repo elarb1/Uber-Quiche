@@ -24,7 +24,7 @@ int hasWon(player_t* player, chrono_t tlimit){
 
 void lap(sprite_t* kart, sprite_t* finish, player_t* player){
     if(collision2(kart, finish) == 1 && (player->deltaTime > 100)){
-        player->lap +=1;
+        player->lap += 1;
         player->deltaTime = 0;
     }
 }
@@ -153,6 +153,7 @@ void score_read(){
         printf("error");
         error = 1;
     }
+
     if(error == 0){
         fgets(scores, 100, (FILE*)score_file);
         printf("%s", scores);
@@ -180,14 +181,14 @@ void playerReset(player_t* p){
 
 void counterP(player_t* p, int i){ //fonction comptant les secondes
     while(p->chronoLap[i].sec > 59){ //reset des secondes à 60, minute+1
-        p->chronoLap[i].sec -= 60;
+        p->chronoLap[i].sec = 0;
         p->chronoLap[i].min++;
     }
 }
 
-void counterT(chrono_t* t){
-    if(t->sec > 59){
-        t->sec = 0;
-        t->min++;
+void counterT(chrono_t *t){
+    if(globaltime.sec > 59){
+        globaltime.sec = 0;
+        globaltime.min++;
     }
 }

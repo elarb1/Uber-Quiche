@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
 	}
 		
 
+	int x = 0;
+
 // Game loop
 	while(world.status == 1)
 	{
@@ -93,13 +95,14 @@ int main(int argc, char *argv[])
 		switch(evenements.type){
 			case SDL_QUIT:
 				world.status = 3;
-                 break;
+                break;
         }
 
-		int x = 0; //clock
-		globaltime.sec = SDL_GetTicks()/1000;
+		globaltime.sec = SDL_GetTicks()/1000 - (x * 60);
 
 		counterT(&globaltime);
+		x++;
+
 		/*
 		if(arriver){
 			player.timeMap[i].sec = globaltime->sec;
@@ -107,11 +110,11 @@ int main(int argc, char *argv[])
 			x++;
 		}*/
 
-		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world, tlimit, &kart_coord);
+		renderer(ecran, &camera2, &dstrect, &kart, &ennemi, &quiche, &player, &ennemi2, &ennemi3, &ennemi4, &world, tlimit, &kart_coord, &globaltime);
 		
 	}
 
-	while(world.status==2){
+	while(world.status == 2){
 		SDL_PollEvent(&evenements);
 		switch(evenements.type){
 			case SDL_QUIT:

@@ -155,7 +155,7 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 }
 
 
-void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, world_t* world, chrono_t tlimit, SDL_Rect* kart_coords){
+void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, world_t* world, chrono_t tlimit, SDL_Rect* kart_coords, chrono_t *gtime){
 	SDL_RenderClear(ecran);
 	SDL_RenderCopyEx(ecran, world->bg,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
 	if(ennemi->isVisible != 1){
@@ -189,6 +189,15 @@ void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_
 		apply_text(ecran, 100, 100, 100, 100, "no", world->font);
 		SDL_Delay(20);
 	}
+
+	char minTime[20];
+	sprintf(minTime, "time : %d", gtime->min);
+	apply_text(ecran, 1050, 0, 100, 100, minTime, world->font);
+
+	char secTime[20];
+	sprintf(secTime, " :%d", gtime->sec);
+	apply_text(ecran, 1140, 0, 100, 100, secTime, world->font);
+
 	//systeme de print au dessus
 	SDL_RenderPresent(ecran);
 	
