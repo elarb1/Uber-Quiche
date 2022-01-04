@@ -14,7 +14,7 @@ c'est devenu un sokoban xD
 
 #include "fonctions_SDL.h"
 #include "structures.h"
-#include "chrono.h"
+#include "player.h"
 #include "functions_main.h"
 #include "score.h"
 #include "end_menu_renderers.h"
@@ -100,8 +100,11 @@ int main(int argc, char *argv[])
 
 		globaltime.sec = SDL_GetTicks()/1000 - (x * 60);
 
-		counterT(&globaltime);
-		x++;
+		if(globaltime.sec > 59){
+        	globaltime.sec = 0;
+       		globaltime.min++;
+        	x++;
+    	}
 
 		/*
 		if(arriver){

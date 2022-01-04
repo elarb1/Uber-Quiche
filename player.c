@@ -186,9 +186,3 @@ void counterP(player_t* p, int i){ //fonction comptant les secondes
     }
 }
 
-void counterT(chrono_t *t){
-    if(globaltime.sec > 59){
-        globaltime.sec = 0;
-        globaltime.min++;
-    }
-}
