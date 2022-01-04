@@ -11,6 +11,6 @@
 
 //tout est en void pour l'instant au cas ou on a pas besoin de retour
 void score_write(player_t* player); //est appelee a la fin de la partie
-void score_read();
+void score_read(SDL_Renderer* renderer, world_t* world);
 
 #endif

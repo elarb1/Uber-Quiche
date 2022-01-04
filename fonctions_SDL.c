@@ -46,6 +46,17 @@ void apply_img(SDL_Renderer *renderer, SDL_Texture *tex, sprite_t *sprite, int x
 	SDL_RenderCopy(renderer, tex, NULL, &dst);
 }
 
+//systeme de render du kart uniquement
+void apply_img_blits(SDL_Renderer *renderer, SDL_Rect* kart_coords, SDL_Texture *tex, sprite_t *sprite, int x, int y){
+	SDL_Rect dst = {0, 0, 0, 0};
+	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
+	dst.x = sprite->x - x;
+	dst.y = sprite->y - y;
+	dst.w = 64;
+	dst.h = 64;
+	kart_coords->x = 64 * sprite->direction;
+	SDL_RenderCopy(renderer, tex, kart_coords, &dst);
+}
 
 void init_sprite(sprite_t *sprite, int x, int y, int w, int h){
 	sprite->x = x;

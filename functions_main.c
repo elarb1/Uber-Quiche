@@ -9,7 +9,7 @@ int hasWon(player_t* player, chrono_t tlimit){
 	int result = 0;
 
 	if(player->lap == LAPS){
-		if(player->score == 4){
+		if(player->score == 1){
 			player->win = 1;
 			result = 1;
 		}else if(player->score < 4){
@@ -25,7 +25,7 @@ int hasWon(player_t* player, chrono_t tlimit){
 }
 
 void lap(sprite_t* kart, sprite_t* finish, player_t* player){
-	if(collision2(kart, finish) == 1 && (player->deltaTime > 100)){
+	if(collision2(kart, finish) == 1 && (player->deltaTime > 400)){
 		player->lap +=1;
 		player->deltaTime = 0;
 	}
@@ -92,7 +92,7 @@ void ennemi_movement_xleft(sprite_t* ennemi, sprite_t* r){ //le rendering de la 
 	}
 }
 
-void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, chrono_t tlimit){
+void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, sprite_t* r, sprite_t* finish, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, chrono_t tlimit, world_t* world){
 	
 			int coll = collision(kart, ennemi);
 		int coll2 = collision(kart, ennemi2);
@@ -116,6 +116,7 @@ void update_states(player_t* player, sprite_t* kart, sprite_t* ennemi, sprite_t*
 
 		if(player->win != 0){
 			score_write(player);
+			world->status = 2;
 		}
 
 }
@@ -139,13 +140,6 @@ int collision2(sprite_t* a, sprite_t* b){
   return 0;
 }
 
-int collision_test(sprite_t* a, sprite_t* b){
-  if((a->x - a->w) == (b->x + b->w)){
-	return 1;
-  }
-  return 0;
-}
-
 int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height){
     if(0 != SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO))
     {
@@ -161,23 +155,24 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 }
 
 
-void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, world_t* world, chrono_t tlimit){
+void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, sprite_t* quiche, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, world_t* world, chrono_t tlimit, SDL_Rect* kart_coords){
 	SDL_RenderClear(ecran);
-		SDL_RenderCopyEx(ecran, world->bg,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(ecran, world->bg,camera2, dstrect, 0, 0, SDL_FLIP_NONE);
 	if(ennemi->isVisible != 1){
-		apply_img(ecran, world->ennemi_tex, ennemi, camera2->x-64, camera2->y-64);
+		apply_img(ecran, world->ennemi_tex, ennemi, camera2->x, camera2->y);
 	}	
 	if(ennemi2->isVisible != 1){
-		apply_img(ecran, world->ennemi_tex, ennemi2, camera2->x-64, camera2->y-64);
+		apply_img(ecran, world->ennemi_tex, ennemi2, camera2->x, camera2->y);
 	}	
 	if(ennemi3->isVisible != 1){
-		apply_img(ecran, world->ennemi_tex, ennemi3, camera2->x-64, camera2->y-64);
+		apply_img(ecran, world->ennemi_tex, ennemi3, camera2->x, camera2->y);
 	}	
 	if(ennemi4->isVisible != 1){
-		apply_img(ecran, world->ennemi_tex, ennemi4, camera2->x-64, camera2->y-64);
+		apply_img(ecran, world->ennemi_tex, ennemi4, camera2->x, camera2->y);
 	}	
-	apply_img(ecran, world->quiche_tex, quiche, camera2->x-64, camera2->y-64);
-	apply_img(ecran, world->player_tex, kart, camera2->x, camera2->y);
+	apply_img(ecran, world->quiche_tex, quiche, camera2->x, camera2->y);
+	apply_img_blits(ecran, kart_coords, world->player_tex, kart, camera2->x, camera2->y);
+	
 	player->deltaTime +=1;
 	//systeme de print a l'ecran (texte)
 	char score[20];
@@ -197,17 +192,17 @@ void renderer(SDL_Renderer* ecran, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_
 void init_textures(world_t* world, SDL_Renderer* ecran){
 	world->bg = charger_image("map.png", ecran);
 	world->player_tex = charger_image("kart.png", ecran);
-	world->ennemi_tex = charger_image("square.png", ecran);
-	world->quiche_tex = charger_image("square.png", ecran);
+	world->ennemi_tex = charger_image("backhoff.png", ecran);
+	world->quiche_tex = charger_image("quiche.png", ecran);
 	world->font = load_font("arial.ttf", 14); 
 }
 
-void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, sprite_t* quiche){
+void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_Rect* dstrect, sprite_t* kart, sprite_t* ennemi, player_t* player, sprite_t* ennemi2, sprite_t* ennemi3, sprite_t* ennemi4, sprite_t* quiche, SDL_Rect* kart_coords){
 	init_sdl(fenetre, renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 	init_ttf();
 
 
-	init_sprite(kart, 2649, 649, 100, 256); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
+	init_sprite(kart, 2649, 649, 64, 64); //0, 0 est le coin sup gauche, (kart.x+64) - 1080 / 2;
 	
 	init_sprite(ennemi, 500, 700, 64, 64);
 	init_sprite(ennemi, 500, 900, 64, 64);
@@ -215,7 +210,7 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 	init_sprite(ennemi3, 1500, 1000, 64, 64);
 	init_sprite(ennemi4, 1500, 500, 64, 64);
 
-	init_sprite(quiche, 2500, 720, 64, 64);
+	init_sprite(quiche, 700, 1350, 64, 64);
 
 		dstrect->x = 0;
 		dstrect->y = 0;
@@ -227,6 +222,11 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 		camera2->h = 480;
 		camera2->w = 640;
 
+		kart_coords->x = 2*kart->direction * 64;
+		kart_coords->y = 0;
+		kart_coords->w = 64;
+		kart_coords->h = 64;
+
 	ennemi->vel = 1;
 	ennemi2->vel = 1;
 	ennemi3->vel = 1;
@@ -235,10 +235,10 @@ void init(SDL_Renderer** renderer, SDL_Window** fenetre, SDL_Rect* camera2, SDL_
 	player->score = 0;
 	player->win = 0;
 
-
+	kart->direction = 0;
 }
 
-void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2, sprite_t* r){
+void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2, sprite_t* r, SDL_Rect* kart_coords){
    
        switch(event->type){
 	
@@ -256,7 +256,7 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 					case SDLK_LEFT:
 						//remodifier pour correspondre au nouvelles variables de la fenetre
 						movex -= MOVE_SPEED; 
-
+						kart->direction = 1;
 						//preuve de concept de deplacement de "camera"
 						if((kart->x < 600) || (kart->x-100 > 4000)) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
@@ -274,8 +274,8 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 						printf("%d camx \n", camera2->x);
 						
 						movex += MOVE_SPEED;
-							
-						if( ( kart->x < 0 ) || ( kart->x-100 > 2750 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+							kart->direction = 3;
+						if( ( kart->x < 0 ) || ( kart->x-64 > 2900 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movex -= MOVE_SPEED;
    						}
@@ -286,8 +286,8 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 
 					case SDLK_UP:
 						movey -= MOVE_SPEED;
-
-						if( ( kart->y < 300 ) || ( kart->y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+						kart->direction = 0;
+						if( ( kart->y < 350 ) || ( kart->y-64 > 3000 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    						{
        						movey += MOVE_SPEED;
    						} 
@@ -298,8 +298,8 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
 
 				case SDLK_DOWN:
 					movey += MOVE_SPEED;
-				
-					if( ( kart->y < 0 ) || ( kart->y-64 > 1300 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
+					kart->direction = 2;
+					if( ( kart->y < 0 ) || ( kart->y-64 > 1450 ) ) //ca beug si le x du kart + sa taille "depasse la "limite"
    					{
        					movey -= MOVE_SPEED;
    					} 
@@ -314,6 +314,6 @@ void movement(SDL_Event* event, bool terminer, sprite_t* kart, SDL_Rect* camera2
         kart->x = movex;
 		kart->y = movey;
 
-		camera2->x = (kart->x+128/2) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
-		camera2->y = (kart->y+150/2) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
+		camera2->x = (kart->x) - WINDOW_WIDTH / 2;//(kart.x+64/2) - 1280 / 2;
+		camera2->y = (kart->y) - WINDOW_HEIGHT / 2; //j'ai pas la largeur du kart
 }
